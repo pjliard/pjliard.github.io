@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pierre-Jean Liard — Développeur fullstack</title>
+<meta name="description" content="Chess Analyzer : analyse de parties d'échecs avec Stockfish, diagnostic de faiblesses et entraînement personnalisé. Les décisions d'ingénierie derrière le projet.">
+<style>
+  :root {
+    --ink: #16181d;
+    --ink-soft: #5b6070;
+    --ink-faint: #8b90a0;
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --line: #e6e8ee;
+    --accent: #5b4bd6;
+    --accent-soft: #eeecfc;
+    --ok: #0f8a5f;
+    --max: 860px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  h1, h2, h3 { line-height: 1.25; letter-spacing: -0.015em; }
+  h1 { font-size: clamp(2rem, 5vw, 2.75rem); margin: 0 0 12px; }
+  h2 {
+    font-size: clamp(1.35rem, 3vw, 1.65rem);
+    margin: 0 0 8px;
+  }
+  h3 { font-size: 1.05rem; margin: 0 0 6px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+
+  /* ── En-tête ── */
+  header {
+    border-bottom: 1px solid var(--line);
+    padding: 72px 0 56px;
+  }
+  .eyebrow {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 14px;
+  }
+  .lede { font-size: 1.18rem; color: var(--ink-soft); max-width: 62ch; margin: 0 0 26px; }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    background: var(--bg);
+  }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ── Sections ── */
+  section { padding: 60px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: 0; }
+  .kicker {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+  .sub { color: var(--ink-soft); max-width: 66ch; }
+
+  /* ── Chiffres ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 28px 0 0;
+  }
+  .stat { background: var(--bg); padding: 18px 20px; }
+  .stat b {
+    display: block;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat span { font-size: 0.87rem; color: var(--ink-soft); }
+
+  /* ── Captures ── */
+  figure { margin: 26px 0 0; }
+  figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  figcaption {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    max-width: 66ch;
+  }
+
+  /* ── Décisions ── */
+  .decision {
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+  .decision:first-of-type { border-top: 0; }
+  .decision p { margin: 0 0 10px; color: var(--ink-soft); }
+  .decision p:last-child { margin-bottom: 0; }
+  .decision strong { color: var(--ink); }
+  .metric {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* ── Listes ── */
+  ul { margin: 0 0 16px; padding-left: 20px; color: var(--ink-soft); }
+  li { margin-bottom: 8px; }
+  li strong { color: var(--ink); }
+
+  /* ── Stack ── */
+  .stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 22px;
+    margin-top: 24px;
+  }
+  .stack h3 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
+  .stack p { font-size: 0.95rem; color: var(--ink-soft); margin: 0; }
+
+  /* ── Encart ── */
+  .callout {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--accent);
+    padding: 20px 22px;
+    border-radius: 0 8px 8px 0;
+    margin: 26px 0 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  footer { padding: 56px 0 72px; color: var(--ink-soft); font-size: 0.95rem; }
+  footer a { font-weight: 500; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    header { padding: 48px 0 40px; }
+    section { padding: 44px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Développeur fullstack</p>
+    <h1>Pierre-Jean Liard</h1>
+    <p class="lede">
+      Je conçois des applications web où les chiffres affichés à l'utilisateur
+      sont justes — et où l'on sait <em>pourquoi</em> ils le sont. Python, React,
+      et une attention particulière à ce qui casse silencieusement.
+    </p>
+    <div class="links">
+      <a class="btn btn-primary" href="mailto:pierrejean.liard@gmail.com">pierrejean.liard@gmail.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/pierre-jean-liard-203535136/" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Projet</p>
+    <h2>Chess Analyzer</h2>
+    <p class="sub">
+      Une application qui récupère les parties d'un joueur sur Lichess ou Chess.com,
+      les fait analyser par Stockfish, et répond à la question qu'un moteur ne traite
+      pas : <strong>qu'est-ce que ce joueur rate systématiquement, et que doit-il
+      travailler aujourd'hui ?</strong>
+    </p>
+
+    <div class="stats">
+      <div class="stat"><b>27 000</b><span>lignes de code applicatif</span></div>
+      <div class="stat"><b>12 000</b><span>lignes de tests</span></div>
+      <div class="stat"><b>53</b><span>détecteurs de motifs</span></div>
+      <div class="stat"><b>5,9 M</b><span>puzzles indexés</span></div>
+    </div>
+
+    <figure>
+      <img src="assets/rapport.png" alt="Rapport d'analyse : précision globale de 89 %, niveau estimé par phase de jeu, faiblesse prioritaire" loading="lazy">
+      <figcaption>
+        Rapport produit sur 25 parties réelles. La précision suit la formule de Lichess,
+        ce qui rend le chiffre comparable à celui que le joueur voit déjà ailleurs.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Le problème</p>
+    <h2>Un moteur d'échecs ne dit pas ce qu'il faut travailler</h2>
+    <p class="sub">
+      Stockfish sait qu'un coup a coûté 180 centipions. Il ne dit ni pourquoi, ni si
+      l'erreur est récurrente, ni ce qu'il faudrait réviser. Traduire une suite
+      d'évaluations en diagnostic exploitable demande trois choses, et chacune est un
+      piège :
+    </p>
+    <ul>
+      <li><strong>Des métriques justes.</strong> Perdre 50 centipions n'a pas le même sens à égalité et avec une dame d'avance. Un seuil fixe traite les deux cas identiquement — et se trompe dans les deux.</li>
+      <li><strong>Une attribution causale.</strong> Un clouage est présent dans énormément de positions sans être ce que le joueur a manqué. Détecter une figure géométrique ne suffit pas ; il faut prouver que le gain se concrétise.</li>
+      <li><strong>De l'honnêteté statistique.</strong> Sur vingt parties, presque aucun motif n'apparaît assez souvent pour conclure. Un produit qui l'ignore fabrique des diagnostics à partir de bruit.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Le produit</p>
+    <h2>Du diagnostic au rituel quotidien</h2>
+    <p class="sub">
+      Un rapport qu'on lit une fois n'a jamais fait progresser personne. L'application
+      transforme le diagnostic en séance de dix minutes, renouvelée chaque jour.
+    </p>
+
+    <figure>
+      <img src="assets/aujourdhui.png" alt="Écran Aujourd'hui : session du jour avec révisions dues et nouveaux puzzles" loading="lazy">
+      <figcaption>
+        L'écran d'accueil ne montre pas un tableau de bord, mais une seule chose à faire :
+        les positions dues en répétition espacée, plus des puzzles ciblés sur la faiblesse
+        principale.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/faiblesses.png" alt="Onglet Faiblesses : motif signalé avec la mention « pas assez de données (1/12) »" loading="lazy">
+      <figcaption>
+        Une faiblesse n'est déclarée qu'au-delà de douze occurrences, et seulement si la
+        borne inférieure de Wilson à 95 % dépasse la moyenne de la cohorte. En dessous,
+        le motif reste affiché mais sans note d'impact : <strong>l'application dit qu'elle
+        ne sait pas encore</strong>.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/progression.png" alt="Page Progression : évolution de la précision et des faiblesses dans le temps" loading="lazy">
+      <figcaption>
+        Le suivi compare les analyses successives, faiblesse par faiblesse.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Ingénierie</p>
+    <h2>Quatre décisions, et ce qu'elles ont coûté</h2>
+    <p class="sub">
+      Les choix ci-dessous sont ceux qui ont le plus façonné le projet. Chacun a été
+      pris contre une alternative crédible, et chacun se mesure.
+    </p>
+
+    <div class="decision">
+      <h3>Séparer ce qui coûte du moteur de ce qui relève de l'interprétation</h3>
+      <p>
+        Analyser une partie prend <span class="metric">43 s</span> de Stockfish.
+        Recalculer un rapport depuis les analyses déjà en cache en prend
+        <span class="metric">70 ms</span> — pour vingt-cinq parties.
+      </p>
+      <p>
+        Ce rapport de un à cinquante mille dicte l'architecture : chaque partie est
+        analysée une seule fois puis stockée, et le rapport se reconstruit par-dessus
+        à volonté. Modifier une pondération se répercute alors sur tout l'historique
+        instantanément, au lieu de demander des heures de calcul. J'ai vécu le bénéfice
+        pendant ce projet : après avoir corrigé une règle de classement, régénérer le
+        rapport complet a pris soixante-dix millisecondes.
+      </p>
+      <p>
+        <strong>Le coût :</strong> toute donnée utile au rapport final doit être
+        persistée au niveau de la partie. Deux fonctionnalités calculées uniquement
+        dans le chemin direct étaient mortes en production alors que les tests passaient.
+      </p>
+    </div>
+
+    <div class="decision">
+      <h3>Budgéter le moteur en nœuds, pas en temps</h3>
+      <p>
+        Une limite de temps donne un résultat différent selon la machine et la charge :
+        les comparaisons dans la durée, cœur du suivi de progression, n'auraient plus
+        de sens. Une profondeur fixe est reproductible mais son coût explose en position
+        complexe.
+      </p>
+      <p>
+        Le moteur travaille donc à un million de nœuds par position — reproductible
+        <em>et</em> borné, comme l'infrastructure d'analyse de Lichess. Prix payé :
+        <span class="metric">2,27 s par coup</span> en multi-variantes.
+      </p>
+    </div>
+
+    <div class="decision">
+      <h3>Refuser d'afficher un chiffre qu'on ne peut pas soutenir</h3>
+      <p>
+        Le principe traverse tout le code, et c'est le plus contre-intuitif : le produit
+        préfère afficher « pas assez de données » qu'une valeur plausible.
+      </p>
+      <p>
+        Sans Stockfish, l'analyse échoue au lieu de basculer sur une évaluation
+        matérielle — celle-ci donnerait mécaniquement une précision de 100 %, soit un
+        rapport faux et parfaitement crédible. De même, un niveau estimé par phase de
+        jeu n'apparaît qu'au-delà de <span class="metric">100 coups évalués</span> :
+        en dessous, l'intervalle de confiance dépasse la largeur de toute la table de
+        correspondance. Le seuil sort d'un calcul d'erreur standard, pas d'une intuition.
+      </p>
+    </div>
+
+    <div class="decision">
+      <h3>Valider les motifs par le gain réel, pas par la géométrie</h3>
+      <p>
+        Une première version signalait « clouage manqué » dès qu'un clouage existait
+        dans la position — y compris quand le joueur avait perdu sa dame pour une raison
+        sans rapport. Le diagnostic était décoratif.
+      </p>
+      <p>
+        Un motif n'est désormais retenu que si son gain se concrétise dans la ligne
+        principale du moteur. Les détecteurs sont des fonctions pures, testables sur
+        une simple position : c'est ce qui rend soutenables les
+        <span class="metric">53 détecteurs</span> et leurs tests.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Méthode</p>
+    <h2>Comment je sais que ça marche</h2>
+    <p class="sub">
+      Un outil de mesure doit rendre des comptes sur ses propres mesures. Quatre niveaux
+      de garantie, du moins au plus coûteux.
+    </p>
+    <ul>
+      <li><strong>Chaque formule cite sa source.</strong> Probabilité de gain, seuils d'erreur, calcul de précision, découpage des phases : tout est repris des sources primaires de Lichess, référencées en commentaire. Aucune constante magique.</li>
+      <li><strong>1 172 tests, deux niveaux.</strong> Les tests unitaires tournent en <span class="metric">22 s</span> — assez rapide pour ne jamais hésiter à les lancer. Les tests d'intégration pilotent un vrai moteur sur de vraies parties et prennent dix minutes ; un marqueur sépare les deux, la CI exécute tout.</li>
+      <li><strong>Un test de calibration de bout en bout</strong> compare la chaîne complète à des valeurs de référence. Tout ajustement de seuil qui déplacerait les résultats le fait échouer.</li>
+      <li><strong>Une intégration continue</strong> qui rejoue les tests sur une machine vierge, reconstruit le frontend depuis zéro et fabrique l'image Docker.</li>
+    </ul>
+
+    <div class="callout">
+      <p>
+        <strong>Ce que les tests ne voient pas.</strong> Avec 1 139 tests au vert, j'ai
+        pris trente minutes pour piloter l'application comme un utilisateur. J'y ai
+        trouvé six défauts qu'aucun test ne détectait : le bouton unique de l'écran
+        d'accueil menait à une page inexistante ; la sonde de santé lisait un attribut
+        qui n'a jamais existé et annonçait le moteur indisponible sur toute machine ;
+        deux comptes analysant le même pseudo public voyaient mutuellement leurs données.
+      </p>
+      <p>
+        Ces bugs vivent dans les jointures — liens contre routes, attributs contre objets
+        réels, autorisation contre filtrage — là où les tests unitaires ne vont pas.
+        Depuis, je lance l'application et je la parcours avant de déclarer une interface
+        terminée.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Technique</p>
+    <h2>Stack</h2>
+    <div class="stack">
+      <div>
+        <h3>Backend</h3>
+        <p>Python, Flask, SQLAlchemy, Pydantic. Celery et Redis pour les analyses longues, PostgreSQL en production, SQLite en développement. Authentification JWT, paiement Stripe.</p>
+      </div>
+      <div>
+        <h3>Frontend</h3>
+        <p>React, React Router, échiquiers interactifs. Interface en trois couches : l'essentiel visible d'emblée, le détail à la demande.</p>
+      </div>
+      <div>
+        <h3>Analyse</h3>
+        <p>Stockfish en UCI, multi-variantes, tables de finales Syzygy. Livre d'ouvertures de 5 200 positions, base de 5,9 millions de puzzles.</p>
+      </div>
+      <div>
+        <h3>Qualité</h3>
+        <p>pytest, GitHub Actions, Docker. Un audit complet du projet — 88 problèmes identifiés puis traités — documenté et conservé.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Le code de Chess Analyzer n'est pas public. Je le présente volontiers en
+      entretien, documentation technique à l'appui.
+    </p>
+    <p>
+      <a href="mailto:pierrejean.liard@gmail.com">pierrejean.liard@gmail.com</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.linkedin.com/in/pierre-jean-liard-203535136/" rel="noopener">LinkedIn</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
