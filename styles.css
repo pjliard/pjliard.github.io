@@ -145,7 +145,7 @@
     transition: transform 500ms var(--ease), box-shadow 500ms var(--ease);
   }
   .shot:hover { transform: translateY(-5px); box-shadow: 0 40px 70px -30px rgba(0,0,0,.95); }
-  .shot img { width: 100%; height: auto; display: block; }
+  .shot picture, .shot img { display: block; width: 100%; height: auto; }
   .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; margin-top: 34px; }
   .gallery figure { margin: 0; }
 

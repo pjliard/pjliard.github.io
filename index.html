@@ -76,7 +76,7 @@
   .project-more .arw { transition: transform 300ms var(--ease); }
   .project:hover .project-more .arw { transform: translateX(4px); }
   .project-shot { position: relative; border-top: 1px solid var(--line); max-height: 240px; overflow: hidden; }
-  .project-shot img { width: 100%; height: auto; display: block; }
+  .project-shot picture, .project-shot img { display: block; width: 100%; height: auto; }
   .project-shot::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 36%, var(--bg-card)); }
 
   .edu {
@@ -226,7 +226,7 @@
         </div>
       </div>
       <div class="project-shot">
-        <img src="assets/chess-analyzer/rapport.png" alt="Aperçu du rapport d'analyse de Chess Analyzer" loading="lazy">
+        <picture><source srcset="assets/chess-analyzer/rapport.webp" type="image/webp"><img src="assets/chess-analyzer/rapport.png" alt="Aperçu du rapport d'analyse de Chess Analyzer" loading="lazy"></picture>
       </div>
     </a>
   </div>
