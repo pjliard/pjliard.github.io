@@ -3,62 +3,41 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pierre-Jean Liard — Développeur fullstack</title>
-<meta name="description" content="Développeur fullstack. Python, React, systèmes d'analyse. Projets et contact.">
+<title>Pierre-Jean Liard — Software Engineer fullstack</title>
+<meta name="description" content="Software Engineer fullstack, 6 ans d'expérience sur des produits web. Python, React, TypeScript. Disponible pour des missions freelance.">
 <meta name="theme-color" content="#08090f">
-<meta property="og:title" content="Pierre-Jean Liard — Développeur fullstack">
-<meta property="og:description" content="Python, React, systèmes d'analyse.">
+<meta property="og:title" content="Pierre-Jean Liard — Software Engineer fullstack">
+<meta property="og:description" content="6 ans sur des produits web, du front-end aux API. Disponible en freelance.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♟</text></svg>">
 <link rel="stylesheet" href="styles.css">
 <style>
-  /* ── Carte projet (page d'accueil uniquement) ── */
-  .project {
-    display: block;
-    background: var(--bg-card); border: 1px solid var(--line); border-radius: 18px;
-    overflow: hidden; color: inherit; margin-top: 34px;
-    transition: transform 420ms var(--ease), border-color 420ms var(--ease),
-                box-shadow 420ms var(--ease);
+  /* ── Parcours ── */
+  .roles { display: grid; gap: 14px; margin-top: 34px; }
+  .role {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px; padding: 24px;
+    transition: transform 360ms var(--ease), border-color 360ms var(--ease);
   }
-  .project:hover {
-    transform: translateY(-5px); border-color: var(--accent-deep);
-    box-shadow: 0 34px 64px -38px rgba(0,0,0,.95);
+  .role:hover { transform: translateY(-3px); border-color: var(--accent-deep); }
+  .role-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .role-head h3 { font-size: 1.14rem; font-weight: 680; margin: 0; }
+  .role-head .where { color: var(--ink-faint); font-size: .92rem; }
+  .role-head .when {
+    margin-left: auto; color: var(--ink-faint); font-size: .84rem;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
   }
-  .project-body { padding: 28px; }
-  .project-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
-  .project-top h3 { font-size: 1.4rem; font-weight: 680; letter-spacing: -.03em; margin: 0; }
-  .tag {
-    font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em;
-    color: var(--mint); background: rgba(74,222,159,.1);
-    border: 1px solid rgba(74,222,159,.28); border-radius: 100px; padding: 4px 10px;
-  }
-  .project p { color: var(--ink-soft); margin: 0 0 18px; max-width: 58ch; font-size: .99rem; }
-  .project-figs {
-    display: flex; gap: 22px; flex-wrap: wrap; align-items: center;
-    padding-top: 18px; border-top: 1px solid var(--line);
-  }
-  .fig { display: flex; align-items: baseline; gap: 7px; }
-  .fig b {
-    font-size: 1.06rem; font-weight: 700; letter-spacing: -.03em;
-    font-variant-numeric: tabular-nums; color: var(--ink);
-  }
-  .fig span { font-size: .84rem; color: var(--ink-faint); }
-  .project-more {
-    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
-    color: var(--accent); font-weight: 600; font-size: .95rem;
-  }
-  .project-more .arw { transition: transform 300ms var(--ease); }
-  .project:hover .project-more .arw { transform: translateX(4px); }
-  .project-shot {
-    position: relative; border-top: 1px solid var(--line);
-    max-height: 260px; overflow: hidden;
-  }
-  .project-shot img { width: 100%; height: auto; display: block; }
-  .project-shot::after {
-    content: ""; position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 38%, var(--bg-card));
+  .role .what { color: var(--accent); font-size: .92rem; font-weight: 500; margin: 0 0 14px; }
+  .role ul { margin: 0 0 14px; padding-left: 18px; }
+  .role li { color: var(--ink-soft); font-size: .95rem; line-height: 1.55; margin-bottom: 6px; }
+  .role li:last-child { margin-bottom: 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tags span {
+    font-size: .78rem; font-weight: 500; color: var(--ink-soft);
+    border: 1px solid var(--line); background: rgba(255,255,255,.02);
+    border-radius: 100px; padding: 3px 11px;
   }
 
+  /* ── Compétences ── */
   .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 34px; }
   .skills div {
     background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 20px;
@@ -66,11 +45,42 @@
   }
   .skills div:hover { border-color: var(--accent-deep); transform: translateY(-3px); }
   .skills h3 { font-size: .73rem; text-transform: uppercase; letter-spacing: .13em; color: var(--accent); margin-bottom: 8px; }
-  .skills p { font-size: .9rem; color: var(--ink-soft); margin: 0; line-height: 1.55; }
+  .skills p { font-size: .92rem; color: var(--ink-soft); margin: 0; line-height: 1.55; }
+
+  /* ── Carte projet ── */
+  .project {
+    display: block; background: var(--bg-card); border: 1px solid var(--line); border-radius: 18px;
+    overflow: hidden; color: inherit; margin-top: 34px;
+    transition: transform 420ms var(--ease), border-color 420ms var(--ease), box-shadow 420ms var(--ease);
+  }
+  .project:hover { transform: translateY(-5px); border-color: var(--accent-deep); box-shadow: 0 34px 64px -38px rgba(0,0,0,.95); }
+  .project-body { padding: 26px; }
+  .project-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .project-top h3 { font-size: 1.32rem; font-weight: 680; letter-spacing: -.03em; margin: 0; }
+  .tag {
+    font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--mint); background: rgba(74,222,159,.1);
+    border: 1px solid rgba(74,222,159,.28); border-radius: 100px; padding: 4px 10px;
+  }
+  .project p { color: var(--ink-soft); margin: 0 0 18px; max-width: 58ch; font-size: .97rem; }
+  .project-figs { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; padding-top: 16px; border-top: 1px solid var(--line); }
+  .fig { display: flex; align-items: baseline; gap: 6px; }
+  .fig b { font-size: 1.02rem; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .fig span { font-size: .82rem; color: var(--ink-faint); }
+  .project-more { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 600; font-size: .94rem; }
+  .project-more .arw { transition: transform 300ms var(--ease); }
+  .project:hover .project-more .arw { transform: translateX(4px); }
+  .project-shot { position: relative; border-top: 1px solid var(--line); max-height: 240px; overflow: hidden; }
+  .project-shot img { width: 100%; height: auto; display: block; }
+  .project-shot::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 36%, var(--bg-card)); }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 26px; color: var(--ink-faint); font-size: .92rem; }
+  .meta b { color: var(--ink-soft); font-weight: 600; }
 
   @media (max-width: 620px) {
-    .project-body { padding: 22px; }
+    .role-head .when { margin-left: 0; width: 100%; }
     .project-more { margin-left: 0; }
+    .project-body, .role { padding: 20px; }
   }
 </style>
 </head>
@@ -80,24 +90,112 @@
 
 <header class="hero">
   <div class="wrap">
-    <span class="eyebrow rise"><span class="dot"></span>Développeur fullstack</span>
+    <span class="eyebrow rise"><span class="dot"></span>Disponible en freelance</span>
     <p class="name rise d1">Pierre-Jean Liard</p>
-    <h1 class="rise d1"><span class="grad">Des chiffres justes,<br>et le pourquoi.</span></h1>
+    <h1 class="rise d1"><span class="grad">Des produits web,<br>de bout en bout.</span></h1>
     <p class="lede rise d2">
-      Python, React, Stockfish. Je construis des systèmes dont les résultats
-      résistent à l'examen.
+      Software Engineer fullstack, 6 ans en CDI sur des produits en production.
+      Je conçois l'architecture, développe du front-end aux API, et challenge
+      le besoin avec les équipes produit.
     </p>
     <div class="links rise d3">
-      <a class="btn btn-primary" href="chess-analyzer/">Voir mon projet <span class="arw">→</span></a>
-      <a class="btn" href="mailto:pierrejean.liard@gmail.com">Me contacter</a>
+      <a class="btn btn-primary" href="mailto:pierrejean.liard@gmail.com">Me contacter <span class="arw">→</span></a>
+      <a class="btn" href="#parcours">Mon parcours</a>
+    </div>
+    <div class="meta rise d3">
+      <span><b>Python</b> · Flask · FastAPI</span>
+      <span><b>React</b> · TypeScript · React Native</span>
+      <span><b>PostgreSQL</b> · MongoDB · Docker</span>
     </div>
   </div>
 </header>
 
+<section class="lift" id="parcours">
+  <div class="wrap">
+    <p class="kicker rise">Parcours</p>
+    <h2 class="rise">Six ans sur des produits en production</h2>
+
+    <div class="roles">
+      <article class="role rise">
+        <div class="role-head">
+          <h3>Ouihelp</h3>
+          <span class="where">Paris · CDI</span>
+          <span class="when">mars 2023 — aujourd'hui</span>
+        </div>
+        <p class="what">Software Engineer Fullstack · médico-social</p>
+        <ul>
+          <li>Architecture et développement de fonctionnalités produit de bout en bout, pour des outils utilisés par <b>~600 personnes par jour</b>.</li>
+          <li>Rédaction des cadrages techniques et définition des standards de développement de l'équipe.</li>
+          <li>Arbitrages fonctionnels et remise en question du besoin avec l'équipe produit.</li>
+        </ul>
+        <div class="tags"><span>Python</span><span>Flask</span><span>TypeScript</span><span>React</span><span>React Native</span></div>
+      </article>
+
+      <article class="role rise">
+        <div class="role-head">
+          <h3>Systran</h3>
+          <span class="where">Paris · CDI</span>
+          <span class="when">oct. 2020 — févr. 2023</span>
+        </div>
+        <p class="what">Software Engineer Fullstack · traduction automatique</p>
+        <ul>
+          <li>Outil d'entraînement de modèles : sélection des corpus, lancement d'entraînements ciblés, visualisation des scores et de la progression.</li>
+          <li>Front-end d'exploration de <b>plusieurs centaines de modèles</b> en arborescence — rendu, structuration des données, navigation, recherche.</li>
+          <li>Conteneurisation des environnements de développement et de déploiement.</li>
+        </ul>
+        <div class="tags"><span>Python</span><span>Flask</span><span>JavaScript</span><span>React</span><span>Docker</span></div>
+      </article>
+
+      <article class="role rise">
+        <div class="role-head">
+          <h3>Thales</h3>
+          <span class="where">Élancourt · apprentissage</span>
+          <span class="when">sept. 2017 — sept. 2020</span>
+        </div>
+        <p class="what">Software Engineer · défense &amp; aéronautique</p>
+        <ul>
+          <li>Logiciels de dépouillement et de conversion de données d'essais en vol.</li>
+          <li>Automatisation et validation des tests de qualification d'un appareil aéroporté.</li>
+        </ul>
+        <div class="tags"><span>Python</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker rise">Compétences</p>
+    <h2 class="rise">Ce sur quoi je travaille</h2>
+    <div class="skills">
+      <div class="rise">
+        <h3>Back-end</h3>
+        <p>Python, Flask, API REST, PostgreSQL, MongoDB, conteneurisation Docker.</p>
+      </div>
+      <div class="rise d1">
+        <h3>Front-end</h3>
+        <p>React, TypeScript, React Native. Interfaces de données, applications mobiles.</p>
+      </div>
+      <div class="rise d2">
+        <h3>Méthode</h3>
+        <p>Cadrages techniques, standards d'équipe, Agile / Scrum, revue de code.</p>
+      </div>
+      <div class="rise d3">
+        <h3>Formation</h3>
+        <p>Diplôme d'ingénieur en informatique, EPITA. Anglais opérationnel, TOEIC 860.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="lift">
   <div class="wrap">
-    <p class="kicker rise">Projet</p>
-    <h2 class="rise">Ce que je construis</h2>
+    <p class="kicker rise">Projet personnel</p>
+    <h2 class="rise">Ce que je construis sur mon temps</h2>
+    <p class="sub rise d1">
+      Un projet mené seul, de l'architecture au déploiement — l'occasion de pousser
+      la rigueur plus loin que ne le permet un planning.
+    </p>
 
     <a class="project rise d1" href="chess-analyzer/">
       <div class="project-body">
@@ -123,35 +221,10 @@
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <p class="kicker rise">Compétences</p>
-    <h2 class="rise">Ce sur quoi je travaille</h2>
-    <div class="skills">
-      <div class="rise">
-        <h3>Backend</h3>
-        <p>Python, Flask, SQLAlchemy, PostgreSQL, Celery + Redis, JWT, Stripe.</p>
-      </div>
-      <div class="rise d1">
-        <h3>Frontend</h3>
-        <p>React, React Router, interfaces de données, composants interactifs.</p>
-      </div>
-      <div class="rise d2">
-        <h3>Données &amp; calcul</h3>
-        <p>Pipelines d'analyse, moteurs UCI, bases volumineuses, métriques calibrées.</p>
-      </div>
-      <div class="rise d3">
-        <h3>Qualité</h3>
-        <p>pytest, GitHub Actions, Docker, audits et documentation technique.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <footer>
   <div class="wrap">
     <h2 class="rise" style="margin-bottom:16px">Parlons-en</h2>
-    <p class="rise d1">Disponible pour des missions freelance et des projets techniques.</p>
+    <p class="rise d1">Disponible pour des missions freelance.</p>
     <div class="foot-links rise d2">
       <a href="mailto:pierrejean.liard@gmail.com">pierrejean.liard@gmail.com</a>
       <a href="https://www.linkedin.com/in/pierre-jean-liard-203535136/" rel="noopener">LinkedIn</a>
