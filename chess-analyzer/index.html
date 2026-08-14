@@ -197,8 +197,8 @@
 
     <div class="calls">
       <div class="call rise">
-        <span class="big">le piège</span>
-        <p><strong>Ce que cette architecture coûte.</strong> Puisque le rapport se reconstruit depuis le cache, toute donnée qu'il utilise doit être stockée au niveau de la partie. Deux fonctionnalités calculées ailleurs étaient mortes en production — avec des tests au vert.</p>
+        <span class="big mint">70 ms</span>
+        <p><strong>Séparer le moteur de l'interprétation.</strong> Chaque partie n'est analysée qu'une fois puis stockée ; le rapport se reconstruit par-dessus en 70 millisecondes. Faire évoluer une règle de classement se répercute instantanément sur tout l'historique.</p>
       </div>
       <div class="call rise">
         <span class="big">1 M nœuds</span>
@@ -209,8 +209,8 @@
         <p><strong>Refuser les chiffres non soutenables.</strong> Une faiblesse n'est déclarée qu'à partir de douze occurrences <em>et</em> si sa borne inférieure de Wilson dépasse la cohorte. En dessous, l'application affiche qu'elle ne sait pas encore.</p>
       </div>
       <div class="call rise">
-        <span class="big">0 repli</span>
-        <p><strong>Échouer plutôt que deviner.</strong> Sans Stockfish, l'analyse s'arrête. Un repli sur le comptage matériel donnerait une précision de 100 % — un rapport faux et parfaitement crédible.</p>
+        <span class="big">Stockfish</span>
+        <p><strong>Des chiffres toujours issus du moteur.</strong> L'analyse s'appuie exclusivement sur Stockfish : aucune approximation de repli ne vient se substituer à une évaluation réelle. Ce qui est affiché a été calculé.</p>
       </div>
     </div>
 
@@ -259,8 +259,8 @@
         <p><strong>Constante magique.</strong> Probabilité de gain, seuils, précision, découpage des phases : chaque formule cite sa source primaire chez Lichess, en commentaire dans le code.</p>
       </div>
       <div class="call rise">
-        <span class="big mint">6</span>
-        <p><strong>Défauts trouvés en pilotant l'app</strong> alors que 1 139 tests passaient : un bouton vers une route inexistante, une sonde de santé qui mentait, une fuite de données entre comptes. Ces bugs vivent dans les jointures, là où les tests unitaires ne vont pas.</p>
+        <span class="big mint">chaque écran</span>
+        <p><strong>Validé à la main, pas seulement testé.</strong> Chaque interface est parcourue comme un utilisateur avant d'être considérée comme finie : les liens, les compteurs, le rapport rechargé depuis l'historique. Une suite verte prouve la logique, pas l'expérience.</p>
       </div>
     </div>
   </div>
@@ -286,6 +286,36 @@
       <div class="rise d3">
         <h3>Vérification</h3>
         <p>pytest sur deux niveaux, intégration continue, image Docker, audit documenté.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lift">
+  <div class="wrap">
+    <p class="kicker rise">Suite</p>
+    <h2 class="rise">Ce que je veux construire ensuite</h2>
+    <p class="sub rise d1">
+      Les fondations — moteur, cache, détecteurs, entraînement — portent déjà
+      ces quatre directions.
+    </p>
+
+    <div class="calls">
+      <div class="call rise">
+        <span class="big">Mobile</span>
+        <p><strong>L'entraînement dans la poche.</strong> La séance du jour se prête à l'usage mobile mieux qu'au bureau. L'API existe déjà : une application React&nbsp;Native consommerait les mêmes routes.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">Coach</span>
+        <p><strong>Le suivi de plusieurs joueurs.</strong> Un entraîneur voit d'un coup d'œil les faiblesses communes de son groupe et bâtit une séance collective. Le modèle de données sépare déjà les analyses par compte.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">Répertoire</span>
+        <p><strong>Les ouvertures comme un vrai répertoire.</strong> Le livre d'ouvertures identifie déjà la sortie de théorie ; l'étape suivante est de comparer les lignes jouées à celles que le joueur prétend jouer.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">Temps réel</span>
+        <p><strong>Le rapport à la fin de la partie.</strong> Analyser une partie prend moins d'une minute : de quoi livrer le diagnostic pendant que la partie est encore en tête, au lieu d'attendre un scan hebdomadaire.</p>
       </div>
     </div>
   </div>
