@@ -1,7 +1,7 @@
 :root {
     --bg: #08090f;  --bg-lift: #0e1018;  --bg-card: #12141d;
     --line: #1e2130;  --line-soft: #171a26;
-    --ink: #f2f3f7;  --ink-soft: #a5aabb;  --ink-faint: #6b7186;
+    --ink: #f2f3f7;  --ink-soft: #a5aabb;  --ink-faint: #7c8296;
     --accent: #8b7cff;  --accent-deep: #6455e8;  --mint: #4ade9f;
     --max: 940px;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -131,7 +131,7 @@
   .box-accent { fill: rgba(100,85,232,.14); stroke: var(--accent-deep); }
   .box-mint { fill: rgba(74,222,159,.1); stroke: rgba(74,222,159,.5); }
   .t { font: 600 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #f2f3f7; }
-  .t-sm { font: 500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #6b7186; }
+  .t-sm { font: 500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #7c8296; }
   .t-metric { font: 700 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #8b7cff; }
   .t-mint { fill: #4ade9f; }
   .wire { stroke: #2a2e42; stroke-width: 1.6; fill: none; }
