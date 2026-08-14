@@ -225,6 +225,68 @@
   }
   figcaption strong { color: var(--ink-soft); font-weight: 600; }
 
+  /* ── Déroulé du pipeline ── */
+  .flow { margin-top: 44px; counter-reset: step; }
+  .step {
+    position: relative;
+    padding: 0 0 34px 60px;
+    counter-increment: step;
+  }
+  .step:last-child { padding-bottom: 0; }
+  /* pastille numérotée */
+  .step::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute; left: 0; top: -2px;
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    border-radius: 11px;
+    font-size: 0.82rem; font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-faint);
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    transition: color 520ms var(--ease), border-color 520ms var(--ease),
+                box-shadow 520ms var(--ease), background 520ms var(--ease);
+    z-index: 1;
+  }
+  /* segment de liaison */
+  .step::after {
+    content: "";
+    position: absolute; left: 18px; top: 40px; bottom: -2px;
+    width: 2px;
+    background: var(--line);
+    transition: background 620ms var(--ease);
+  }
+  .step:last-child::after { display: none; }
+
+  .step.in::before {
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent-deep), var(--accent));
+    border-color: transparent;
+    box-shadow: 0 6px 20px -8px var(--accent-deep);
+  }
+  .step.in::after {
+    background: linear-gradient(180deg, var(--accent-deep), var(--line));
+  }
+
+  .step h3 { margin-bottom: 8px; }
+  .step p { color: var(--ink-soft); font-size: 0.99rem; margin-bottom: 10px; }
+  .step p:last-child { margin-bottom: 0; }
+  .note {
+    display: inline-block;
+    font-size: 0.86rem; color: var(--ink-faint);
+    border-left: 2px solid var(--line);
+    padding-left: 12px; margin-top: 2px;
+    line-height: 1.55;
+  }
+  .note b { color: var(--ink-soft); font-weight: 600; }
+
+  @media (max-width: 620px) {
+    .step { padding-left: 50px; }
+    .step::before { width: 32px; height: 32px; border-radius: 9px; }
+    .step::after { left: 15px; top: 34px; }
+  }
+
   /* ── Décisions ── */
   .decisions { margin-top: 42px; display: grid; gap: 16px; }
   .decision {
@@ -450,6 +512,106 @@
 
 <section class="lift">
   <div class="wrap">
+    <p class="kicker rise">Sous le capot</p>
+    <h2 class="rise">D'un pseudo à un plan d'entraînement</h2>
+    <p class="sub rise d1">
+      Ce qui se passe entre le moment où un joueur colle l'adresse de son profil et
+      celui où il reçoit ses exercices. Six étapes, dont une seule coûte cher.
+    </p>
+
+    <div class="flow">
+      <div class="step rise">
+        <h3>Récupérer les parties</h3>
+        <p>
+          Appel de l'API Lichess ou Chess.com. Chess.com n'expose pas un flux continu
+          mais des archives mensuelles : il faut les parcourir à rebours jusqu'à réunir
+          le nombre de parties demandé. Filtrage sur la cadence choisie, puis
+          dédoublonnage contre ce qui est déjà en base.
+        </p>
+        <p class="note">
+          Une partie déjà analysée n'est jamais renvoyée au moteur, <b>même dans un
+          autre rapport</b>. Sur un second passage, cette étape rend la main sans coût.
+        </p>
+      </div>
+
+      <div class="step rise">
+        <h3>Répartir sur les workers</h3>
+        <p>
+          Les parties restantes sont distribuées sur plusieurs processus, chacun avec sa
+          propre instance de Stockfish. Le grain de parallélisme est la partie, jamais la
+          position : une partie doit être évaluée dans l'ordre pour propager l'évaluation
+          précédente d'un coup au suivant.
+        </p>
+        <p class="note">
+          Un worker par tranche de deux cœurs, plafonné à cinq. Chaque instance réserve
+          128 Mo de table de transposition — <b>trente processus satureraient la machine</b>.
+        </p>
+      </div>
+
+      <div class="step rise">
+        <h3>Évaluer chaque coup</h3>
+        <p>
+          Pour chaque coup du joueur étudié, le moteur calcule les trois meilleures
+          variantes à un million de nœuds. Le coup réellement joué est situé par rapport
+          à elles, ce qui donne sa perte en centipions puis, après conversion logistique,
+          sa perte en probabilité de gain.
+        </p>
+        <p class="note">
+          Les coups de théorie — reconnus via un livre de 5 200 positions — et les
+          positions déjà décidées au-delà de ±300 centipions sont comptés mais
+          <b>jamais notés</b> : ni au numérateur, ni au dénominateur des moyennes.
+        </p>
+      </div>
+
+      <div class="step rise">
+        <h3>Détecter ce qui a été manqué</h3>
+        <p>
+          Les détecteurs ne tournent que sur les coups réellement fautifs — inutile de
+          chercher un motif tactique là où le joueur a trouvé le meilleur coup. Un motif
+          n'est retenu que si la variante principale le concrétise : la fourchette doit
+          aboutir à une capture dans les coups qui suivent.
+        </p>
+        <p class="note">
+          Les détecteurs tournent aussi sur le coup joué, pour identifier les faiblesses
+          que l'erreur a <b>créées</b> — pas seulement celles qu'elle a manquées.
+        </p>
+      </div>
+
+      <div class="step rise">
+        <h3>Agréger et classer</h3>
+        <p>
+          Chaque analyse de partie est stockée, puis le rapport se construit par-dessus :
+          précision globale, découpage par phase, motifs regroupés et classés par impact
+          — fréquence, gravité moyenne pondérée par la volatilité de la position, part de
+          moments critiques.
+        </p>
+        <p class="note">
+          Le filtre statistique s'applique ici : douze occurrences minimum <b>et</b> une
+          borne de Wilson au-dessus de la cohorte, faute de quoi le motif est affiché
+          sans note d'impact.
+        </p>
+      </div>
+
+      <div class="step rise">
+        <h3>Produire l'entraînement</h3>
+        <p>
+          Les faiblesses retenues sont traduites en thèmes de puzzles, cherchés dans une
+          base de 5,9 millions de positions filtrée sur la qualité, dans une fourchette
+          de difficulté calée trois cents points sous le niveau du joueur. Les positions
+          issues de ses propres erreurs alimentent en parallèle une file de révision.
+        </p>
+        <p class="note">
+          Cette file suit une échelle d'intervalles fixes — 4 h, 1 j, 3 j, 7 j, puis
+          jusqu'à six mois. Une réussite fait monter d'un cran, <b>un échec ramène au
+          début</b>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <p class="kicker rise">Ingénierie</p>
     <h2 class="rise">Quatre décisions, et ce qu'elles ont coûté</h2>
     <p class="sub rise d1">
@@ -529,7 +691,7 @@
   </div>
 </section>
 
-<section>
+<section class="lift">
   <div class="wrap">
     <p class="kicker rise">Méthode</p>
     <h2 class="rise">Comment je sais que ça marche</h2>
@@ -565,7 +727,7 @@
   </div>
 </section>
 
-<section class="lift">
+<section>
   <div class="wrap">
     <p class="kicker rise">Technique</p>
     <h2 class="rise">Stack</h2>
