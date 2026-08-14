@@ -39,11 +39,11 @@
 
   /* ── Compétences ── */
   .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 34px; }
-  .skills div {
+  .skills > div {
     background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 20px;
     transition: border-color 340ms var(--ease), transform 340ms var(--ease);
   }
-  .skills div:hover { border-color: var(--accent-deep); transform: translateY(-3px); }
+  .skills > div:hover { border-color: var(--accent-deep); transform: translateY(-3px); }
   .skills h3 { font-size: .73rem; text-transform: uppercase; letter-spacing: .13em; color: var(--accent); margin-bottom: 8px; }
   .skills p { font-size: .92rem; color: var(--ink-soft); margin: 0; line-height: 1.55; }
 
@@ -74,6 +74,12 @@
   .project-shot img { width: 100%; height: auto; display: block; }
   .project-shot::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 36%, var(--bg-card)); }
 
+  .edu {
+    margin: 22px 0 0; color: var(--ink-faint); font-size: .92rem;
+  }
+  .edu b { color: var(--ink-soft); font-weight: 600; }
+  .skills .tags { margin-top: 2px; }
+
   .meta { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 26px; color: var(--ink-faint); font-size: .92rem; }
   .meta b { color: var(--ink-soft); font-weight: 600; }
 
@@ -101,11 +107,6 @@
     <div class="links rise d3">
       <a class="btn btn-primary" href="mailto:pierrejean.liard@gmail.com">Me contacter <span class="arw">→</span></a>
       <a class="btn" href="#parcours">Mon parcours</a>
-    </div>
-    <div class="meta rise d3">
-      <span><b>Python</b> · Flask · FastAPI</span>
-      <span><b>React</b> · TypeScript · React Native</span>
-      <span><b>PostgreSQL</b> · MongoDB · Docker</span>
     </div>
   </div>
 </header>
@@ -160,29 +161,34 @@
         <div class="tags"><span>Python</span></div>
       </article>
     </div>
+
+    <p class="edu rise">
+      <b>EPITA</b> — diplôme d'ingénieur en informatique, 2020.
+      Anglais opérationnel, TOEIC 860.
+    </p>
   </div>
 </section>
 
 <section>
   <div class="wrap">
     <p class="kicker rise">Compétences</p>
-    <h2 class="rise">Ce sur quoi je travaille</h2>
+    <h2 class="rise">Stack technique</h2>
     <div class="skills">
       <div class="rise">
-        <h3>Back-end</h3>
-        <p>Python, Flask, API REST, PostgreSQL, MongoDB, conteneurisation Docker.</p>
+        <h3>Langages</h3>
+        <div class="tags"><span>Python</span><span>TypeScript</span><span>JavaScript</span></div>
       </div>
       <div class="rise d1">
-        <h3>Front-end</h3>
-        <p>React, TypeScript, React Native. Interfaces de données, applications mobiles.</p>
+        <h3>Frameworks</h3>
+        <div class="tags"><span>Flask</span><span>React</span><span>React Native</span></div>
       </div>
       <div class="rise d2">
-        <h3>Méthode</h3>
-        <p>Cadrages techniques, standards d'équipe, Agile / Scrum, revue de code.</p>
+        <h3>Données</h3>
+        <div class="tags"><span>PostgreSQL</span><span>MongoDB</span></div>
       </div>
       <div class="rise d3">
-        <h3>Formation</h3>
-        <p>Diplôme d'ingénieur en informatique, EPITA. Anglais opérationnel, TOEIC 860.</p>
+        <h3>Outils</h3>
+        <div class="tags"><span>Docker</span><span>Git</span><span>Linux</span><span>Linear</span></div>
       </div>
     </div>
   </div>
