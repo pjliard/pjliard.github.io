@@ -74,7 +74,7 @@
   .btn:hover .arw { transform: translateX(3px); }
 
   /* ── Sections ── */
-  section { padding: clamp(60px, 10vh, 100px) 0; }
+  section { padding: clamp(60px, 10vh, 100px) 0; scroll-margin-top: 72px; }
   .lift { background: var(--bg-lift); border-block: 1px solid var(--line-soft); }
   .kicker {
     font-size: .76rem; font-weight: 600; text-transform: uppercase; letter-spacing: .15em;

@@ -36,10 +36,9 @@
 <section id="projet" style="padding-top:0">
   <div class="wrap">
     <div class="stats">
-      <div class="stat rise"><b data-count="27000" data-div="1000" data-suffix=" 000">0</b><span>lignes de code</span></div>
-      <div class="stat rise d1"><b data-count="1172">0</b><span>tests automatisés</span></div>
-      <div class="stat rise d2"><b data-count="53">0</b><span>détecteurs de motifs</span></div>
-      <div class="stat rise d3"><b data-count="59" data-div="10" data-decimal="1" data-suffix=" M">0</b><span>puzzles indexés</span></div>
+      <div class="stat rise"><b data-count="1172">0</b><span>tests automatisés</span></div>
+      <div class="stat rise d1"><b data-count="53">0</b><span>détecteurs de motifs</span></div>
+      <div class="stat rise d2"><b data-count="59" data-div="10" data-decimal="1" data-suffix=" M">0</b><span>puzzles indexés</span></div>
     </div>
 
     <figure class="rise">
@@ -197,16 +196,16 @@
 
     <div class="calls">
       <div class="call rise">
-        <span class="big mint">70 ms</span>
-        <p><strong>Séparer le moteur de l'interprétation.</strong> Analyser 25 parties prend 18 minutes ; reconstruire leur rapport depuis le cache en prend 70. Une règle de classement se corrige sans réanalyser l'historique.</p>
+        <span class="big">le piège</span>
+        <p><strong>Ce que cette architecture coûte.</strong> Puisque le rapport se reconstruit depuis le cache, toute donnée qu'il utilise doit être stockée au niveau de la partie. Deux fonctionnalités calculées ailleurs étaient mortes en production — avec des tests au vert.</p>
       </div>
       <div class="call rise">
         <span class="big">1 M nœuds</span>
         <p><strong>Budgéter en nœuds, pas en temps.</strong> Une limite de temps donne un résultat différent selon la machine — le suivi de progression n'aurait plus de sens. Coût : 2,27 s par coup.</p>
       </div>
       <div class="call rise">
-        <span class="big">12 / 100</span>
-        <p><strong>Refuser les chiffres non soutenables.</strong> Une faiblesse exige 12 occurrences et une borne de Wilson au-dessus de la cohorte ; un niveau par phase, 100 coups évalués. En dessous, l'app affiche qu'elle ne sait pas.</p>
+        <span class="big">Wilson</span>
+        <p><strong>Refuser les chiffres non soutenables.</strong> Une faiblesse n'est déclarée qu'à partir de douze occurrences <em>et</em> si sa borne inférieure de Wilson dépasse la cohorte. En dessous, l'application affiche qu'elle ne sait pas encore.</p>
       </div>
       <div class="call rise">
         <span class="big">0 repli</span>
@@ -246,8 +245,8 @@
 
     <div class="calls">
       <div class="call rise">
-        <span class="big">1 172</span>
-        <p><strong>Tests sur deux niveaux.</strong> Les unitaires tournent en 22 s ; les tests d'intégration pilotent un vrai moteur sur de vraies parties. Un marqueur sépare les deux, la CI exécute tout.</p>
+        <span class="big">22 s</span>
+        <p><strong>Deux niveaux de tests.</strong> Les unitaires rendent la main en 22 secondes — assez vite pour ne jamais hésiter à les lancer. Les tests d'intégration pilotent un vrai moteur et prennent dix minutes ; un marqueur sépare les deux, la CI exécute tout.</p>
       </div>
       <div class="call rise">
         <span class="big">0</span>
@@ -267,20 +266,20 @@
     <h2 class="rise">Outils</h2>
     <div class="stack">
       <div class="rise">
-        <h3>Backend</h3>
-        <p>Python, Flask, SQLAlchemy, Celery + Redis, PostgreSQL, JWT, Stripe.</p>
+        <h3>Moteur</h3>
+        <p>Stockfish piloté en UCI, multi-variantes, tables de finales Syzygy, livre d'ouvertures.</p>
       </div>
       <div class="rise d1">
-        <h3>Frontend</h3>
-        <p>React, React Router, échiquiers interactifs, rapport en trois couches.</p>
+        <h3>Traitement</h3>
+        <p>Analyse parallélisée, cache versionné, file d'attente Celery pour les longues analyses.</p>
       </div>
       <div class="rise d2">
-        <h3>Analyse</h3>
-        <p>Stockfish en UCI, tables Syzygy, livre d'ouvertures, 5,9 M puzzles.</p>
+        <h3>Données</h3>
+        <p>PostgreSQL pour l'application, base locale de 5,9 M puzzles pour l'entraînement.</p>
       </div>
       <div class="rise d3">
-        <h3>Qualité</h3>
-        <p>pytest, GitHub Actions, Docker, audit complet du projet documenté.</p>
+        <h3>Vérification</h3>
+        <p>pytest sur deux niveaux, intégration continue, image Docker, audit documenté.</p>
       </div>
     </div>
   </div>
