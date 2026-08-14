@@ -23,6 +23,14 @@
     return;
   }
 
+  // Longueur réelle de chaque tracé : une valeur devinée trop courte
+  // transforme le trait en pointillés au lieu de l'animer.
+  document.querySelectorAll('.draw').forEach(function (el) {
+    var len = Math.ceil(el.getTotalLength());
+    el.style.strokeDasharray = len;
+    el.style.strokeDashoffset = len;
+  });
+
   var io = new IntersectionObserver(function (es) {
     es.forEach(function (e) {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }

@@ -73,19 +73,19 @@
           <text class="t fade" x="96" y="62" text-anchor="middle">Lichess / Chess.com</text>
           <text class="t-sm fade" x="96" y="80" text-anchor="middle">PGN · filtre cadence</text>
 
-          <line class="wire draw s1" style="--len:66" x1="172" y1="67" x2="236" y2="67" marker-end="url(#a)"/>
+          <line class="wire draw s1" x1="172" y1="67" x2="236" y2="67" marker-end="url(#a)"/>
 
           <rect class="box fade s1" x="238" y="38" width="140" height="58" rx="10"/>
           <text class="t fade s1" x="308" y="62" text-anchor="middle">Workers</text>
           <text class="t-sm fade s1" x="308" y="80" text-anchor="middle">1 Stockfish chacun</text>
 
-          <line class="wire draw s2" style="--len:66" x1="378" y1="67" x2="442" y2="67" marker-end="url(#a)"/>
+          <line class="wire draw s2" x1="378" y1="67" x2="442" y2="67" marker-end="url(#a)"/>
 
           <rect class="box fade s2" x="444" y="38" width="176" height="58" rx="10"/>
           <text class="t fade s2" x="532" y="62" text-anchor="middle">Analyse coup par coup</text>
           <text class="t-sm fade s2" x="532" y="80" text-anchor="middle">MultiPV 3 · 1 M nœuds</text>
 
-          <line class="wire draw s3" style="--len:66" x1="620" y1="67" x2="684" y2="67" marker-end="url(#a)"/>
+          <line class="wire draw s3" x1="620" y1="67" x2="684" y2="67" marker-end="url(#a)"/>
 
           <rect class="box fade s3" x="686" y="38" width="194" height="58" rx="10"/>
           <text class="t fade s3" x="783" y="62" text-anchor="middle">Détection des motifs</text>
@@ -93,7 +93,7 @@
 
           <text class="t-metric fade s3" x="532" y="118" text-anchor="middle">43 s par partie</text>
 
-          <path class="wire draw s4" style="--len:150" d="M783 96 L783 136 L470 136 L470 156" marker-end="url(#a)"/>
+          <path class="wire draw s4" d="M783 96 L783 136 L470 136 L470 156" marker-end="url(#a)"/>
 
           <rect class="box-accent fade s4" x="296" y="158" width="348" height="52" rx="10"/>
           <text class="t fade s4" x="470" y="180" text-anchor="middle">Cache — une analyse par (partie, joueur)</text>
@@ -101,12 +101,12 @@
 
           <text class="t-sm fade s5" x="20" y="230">ÉTAGE 2 — REJOUABLE À VOLONTÉ</text>
 
-          <path class="wire-accent draw s5" style="--len:130" d="M336 210 L336 270 L262 270" marker-end="url(#aa)"/>
+          <path class="wire-accent draw s5" d="M336 210 L336 270 L262 270" marker-end="url(#aa)"/>
           <rect class="box-mint fade s5" x="90" y="246" width="170" height="48" rx="10"/>
           <text class="t fade s5" x="175" y="268" text-anchor="middle">Rapport</text>
           <text class="t-sm fade s5" x="175" y="284" text-anchor="middle">impact · seuils · verdict</text>
 
-          <path class="wire-accent draw s5" style="--len:130" d="M604 210 L604 270 L678 270" marker-end="url(#aa)"/>
+          <path class="wire-accent draw s5" d="M604 210 L604 270 L678 270" marker-end="url(#aa)"/>
           <rect class="box-mint fade s5" x="680" y="246" width="170" height="48" rx="10"/>
           <text class="t fade s5" x="765" y="268" text-anchor="middle">Exercices</text>
           <text class="t-sm fade s5" x="765" y="284" text-anchor="middle">puzzles · révisions</text>
@@ -147,7 +147,7 @@
           <text class="t fade" x="84" y="88" text-anchor="middle">Position</text>
           <text class="t-sm fade" x="84" y="106" text-anchor="middle">+ coup joué</text>
 
-          <line class="wire draw s1" style="--len:56" x1="148" y1="94" x2="204" y2="94" marker-end="url(#b)"/>
+          <line class="wire draw s1" x1="148" y1="94" x2="204" y2="94" marker-end="url(#b)"/>
 
           <rect class="box fade s1" x="206" y="44" width="156" height="100" rx="10"/>
           <text class="t fade s1" x="284" y="68" text-anchor="middle">Stockfish MultiPV 3</text>
@@ -155,14 +155,14 @@
           <text class="t-sm fade s1" x="284" y="107" text-anchor="middle">variante 2 · +0,2</text>
           <text class="t-sm fade s1" x="284" y="124" text-anchor="middle">variante 3 · −0,1</text>
 
-          <line class="wire draw s2" style="--len:56" x1="362" y1="94" x2="418" y2="94" marker-end="url(#b)"/>
+          <line class="wire draw s2" x1="362" y1="94" x2="418" y2="94" marker-end="url(#b)"/>
 
           <rect class="box fade s2" x="420" y="58" width="168" height="72" rx="10"/>
           <text class="t fade s2" x="504" y="84" text-anchor="middle">Perte du coup joué</text>
           <text class="t-sm fade s2" x="504" y="104" text-anchor="middle">centipions → Win %</text>
           <text class="t-sm fade s2" x="504" y="120" text-anchor="middle">conversion logistique</text>
 
-          <line class="wire draw s3" style="--len:56" x1="588" y1="94" x2="644" y2="94" marker-end="url(#b)"/>
+          <line class="wire draw s3" x1="588" y1="94" x2="644" y2="94" marker-end="url(#b)"/>
 
           <rect class="box fade s3" x="646" y="44" width="156" height="100" rx="10"/>
           <text class="t fade s3" x="724" y="68" text-anchor="middle">Seuils sur la perte</text>
@@ -170,14 +170,15 @@
           <text class="t-sm fade s3" x="724" y="107" text-anchor="middle">≥ 0,10 erreur</text>
           <text class="t-sm fade s3" x="724" y="124" text-anchor="middle">≥ 0,15 gaffe</text>
 
-          <path class="wire-accent draw s4" style="--len:170" d="M724 144 L724 186 L502 186" marker-end="url(#bb)"/>
+          <path class="wire-accent draw s4" d="M724 144 L724 186 L502 186" marker-end="url(#bb)"/>
           <rect class="box-accent fade s4" x="330" y="166" width="172" height="40" rx="10"/>
           <text class="t fade s4" x="416" y="191" text-anchor="middle">Détection des motifs</text>
           <text class="t-metric fade s4" x="614" y="176" text-anchor="middle">sur les erreurs seulement</text>
 
-          <text class="t-sm fade s5" x="20" y="176">Comptés mais jamais notés :</text>
-          <text class="t-sm fade s5" x="20" y="194">· coups de théorie (livre de 5 200 positions)</text>
-          <text class="t-sm fade s5" x="20" y="211">· positions décidées au-delà de ±300 cp</text>
+          <line class="fade s5" x1="20" y1="162" x2="20" y2="218" stroke="#2a2e42" stroke-width="2"/>
+          <text class="t-sm fade s5" x="32" y="176">Comptés mais jamais notés :</text>
+          <text class="t-sm fade s5" x="32" y="194">· coups de théorie (livre de 5 200 positions)</text>
+          <text class="t-sm fade s5" x="32" y="211">· positions décidées au-delà de ±300 cp</text>
         </svg>
       </div>
       <figcaption>
