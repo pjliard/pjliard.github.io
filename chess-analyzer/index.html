@@ -50,6 +50,47 @@
 
 <section class="lift">
   <div class="wrap">
+    <p class="kicker rise">Produit</p>
+    <h2 class="rise">Quatre partis pris</h2>
+    <p class="sub rise d1">
+      Les choix qui décident de l'utilité de l'outil se prennent avant la
+      première ligne de code.
+    </p>
+
+    <div class="calls">
+      <div class="call rise">
+        <span class="big">Rituel</span>
+        <p><strong>Une séance par jour plutôt qu'un rapport annuel.</strong> Un rapport se lit une fois et s'oublie. Dix minutes quotidiennes — révisions dues, puis puzzles sur la faiblesse principale — construisent une progression mesurable.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">−300</span>
+        <p><strong>Des exercices calibrés sous le niveau du joueur.</strong> Les puzzles sont tirés 300 points Elo en dessous, ce qui vise 85 % de réussite : le taux auquel l'apprentissage progresse le plus vite, établi par la recherche.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">3 couches</span>
+        <p><strong>L'essentiel d'abord, le détail à la demande.</strong> Précision, niveau par phase et faiblesse n°1 sont visibles sans défiler ; les onglets ouvrent le détail ; un clic sur une partie descend jusqu'à la variante du moteur.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">Aveu</span>
+        <p><strong>Dire ce qu'on ne sait pas encore.</strong> Sous le seuil statistique, l'outil affiche le volume manquant au lieu d'une note. Un joueur qui reçoit un diagnostic faux cesse de faire confiance à tous les autres.</p>
+      </div>
+    </div>
+
+    <div class="gallery">
+      <figure class="rise">
+        <div class="shot"><img src="../assets/chess-analyzer/aujourdhui.png" alt="Écran Aujourd'hui : séance du jour, révisions dues et nouveaux puzzles" loading="lazy"></div>
+        <figcaption>Une seule chose à faire en ouvrant l'app.</figcaption>
+      </figure>
+      <figure class="rise d1">
+        <div class="shot"><img src="../assets/chess-analyzer/progression.png" alt="Page Progression : évolution de la précision et des faiblesses dans le temps" loading="lazy"></div>
+        <figcaption>Chaque faiblesse suivie d'une analyse à l'autre.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <p class="kicker rise">Fonctionnement</p>
     <h2 class="rise">D'un pseudo à un plan d'entraînement</h2>
     <p class="sub rise d1">Une seule étape coûte cher. Elle ne tourne qu'une fois par partie.</p>
@@ -124,7 +165,7 @@
   </div>
 </section>
 
-<section>
+<section class="lift">
   <div class="wrap">
     <p class="kicker rise">Technique</p>
     <h2 class="rise">Ce qui se passe sur un coup</h2>
@@ -190,7 +231,7 @@
   </div>
 </section>
 
-<section class="lift">
+<section>
   <div class="wrap">
     <p class="kicker rise">Décisions</p>
     <h2 class="rise">Quatre arbitrages</h2>
@@ -225,26 +266,31 @@
   </div>
 </section>
 
-<section>
+<section class="lift">
   <div class="wrap">
-    <p class="kicker rise">Produit</p>
-    <h2 class="rise">Un rituel, pas un rapport</h2>
-    <p class="sub rise d1">Le diagnostic devient une séance de dix minutes, renouvelée chaque jour.</p>
+    <p class="kicker rise">Performances</p>
+    <h2 class="rise">Ce que ça coûte, mesuré</h2>
+    <p class="sub rise d1">
+      Valeurs relevées sur la machine de développement, à budget moteur constant.
+    </p>
 
-    <div class="gallery">
-      <figure class="rise">
-        <div class="shot"><img src="../assets/chess-analyzer/aujourdhui.png" alt="Écran Aujourd'hui : séance du jour, révisions dues et nouveaux puzzles" loading="lazy"></div>
-        <figcaption>Une seule chose à faire en ouvrant l'app.</figcaption>
-      </figure>
-      <figure class="rise d1">
-        <div class="shot"><img src="../assets/chess-analyzer/progression.png" alt="Page Progression : évolution de la précision et des faiblesses dans le temps" loading="lazy"></div>
-        <figcaption>Chaque faiblesse suivie d'une analyse à l'autre.</figcaption>
-      </figure>
+    <div class="stats">
+      <div class="stat rise"><b>43 s</b><span>pour analyser une partie, moteur à 1 M nœuds</span></div>
+      <div class="stat rise d1"><b>70 ms</b><span>pour reconstruire le rapport de 25 parties</span></div>
+      <div class="stat rise d2"><b>&lt; 35 ms</b><span>pour choisir un puzzle parmi 5,9 M</span></div>
+      <div class="stat rise d3"><b>5</b><span>parties analysées en parallèle, une instance moteur chacune</span></div>
     </div>
+
+    <p class="sub rise d1" style="margin-top:26px">
+      Le premier chiffre est incompressible : c'est le prix d'une évaluation
+      reproductible. Les trois autres sont le résultat de choix d'architecture —
+      un cache qui évite de le repayer, un index adapté à la requête réelle, et
+      un parallélisme sans état partagé.
+    </p>
   </div>
 </section>
 
-<section class="lift">
+<section>
   <div class="wrap">
     <p class="kicker rise">Fiabilité</p>
     <h2 class="rise">Comment je sais que ça marche</h2>
@@ -266,7 +312,7 @@
   </div>
 </section>
 
-<section>
+<section class="lift">
   <div class="wrap">
     <p class="kicker rise">Stack</p>
     <h2 class="rise">Outils</h2>
@@ -291,7 +337,7 @@
   </div>
 </section>
 
-<section class="lift">
+<section>
   <div class="wrap">
     <p class="kicker rise">Suite</p>
     <h2 class="rise">Ce que je veux construire ensuite</h2>
