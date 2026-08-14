@@ -5,253 +5,421 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pierre-Jean Liard — Développeur fullstack</title>
 <meta name="description" content="Chess Analyzer : analyse de parties d'échecs avec Stockfish, diagnostic de faiblesses et entraînement personnalisé. Les décisions d'ingénierie derrière le projet.">
+<meta name="theme-color" content="#08090f">
+<meta property="og:title" content="Pierre-Jean Liard — Développeur fullstack">
+<meta property="og:description" content="Chess Analyzer : les décisions d'ingénierie derrière un moteur d'analyse d'échecs.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♟</text></svg>">
 <style>
   :root {
-    --ink: #16181d;
-    --ink-soft: #5b6070;
-    --ink-faint: #8b90a0;
-    --bg: #ffffff;
-    --bg-soft: #f7f8fa;
-    --line: #e6e8ee;
-    --accent: #5b4bd6;
-    --accent-soft: #eeecfc;
-    --ok: #0f8a5f;
-    --max: 860px;
+    --bg:        #08090f;
+    --bg-lift:   #0e1018;
+    --bg-card:   #12141d;
+    --line:      #1e2130;
+    --line-soft: #171a26;
+
+    --ink:       #f2f3f7;
+    --ink-soft:  #a5aabb;
+    --ink-faint: #6b7186;
+
+    --accent:      #8b7cff;
+    --accent-deep: #6455e8;
+    --accent-glow: rgba(139, 124, 255, 0.14);
+    --mint:        #4ade9f;
+
+    --max: 900px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   * { box-sizing: border-box; }
 
-  html { -webkit-text-size-adjust: 100%; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
 
   body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    font: 17px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
-  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  ::selection { background: var(--accent-deep); color: #fff; }
 
-  h1, h2, h3 { line-height: 1.25; letter-spacing: -0.015em; }
-  h1 { font-size: clamp(2rem, 5vw, 2.75rem); margin: 0 0 12px; }
-  h2 {
-    font-size: clamp(1.35rem, 3vw, 1.65rem);
-    margin: 0 0 8px;
-  }
-  h3 { font-size: 1.05rem; margin: 0 0 6px; }
-  p { margin: 0 0 16px; }
-  a { color: var(--accent); }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 26px; }
 
-  /* ── En-tête ── */
-  header {
-    border-bottom: 1px solid var(--line);
-    padding: 72px 0 56px;
+  h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.12; margin: 0; }
+  p { margin: 0 0 18px; }
+  a { color: var(--accent); text-decoration: none; }
+
+  /* ── Progression de lecture ── */
+  #bar {
+    position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--accent-deep), var(--accent), var(--mint));
+    z-index: 100;
+    transition: width 120ms linear;
   }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    padding: clamp(96px, 18vh, 180px) 0 clamp(72px, 12vh, 120px);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -30%; left: 50%;
+    width: min(1100px, 130vw); aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(circle at center,
+                var(--accent-glow) 0%, transparent 62%);
+    pointer-events: none;
+    animation: breathe 14s var(--ease) infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+    50%      { opacity: 1;    transform: translateX(-50%) scale(1.1); }
+  }
+  .hero .wrap { position: relative; }
+
   .eyebrow {
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-    color: var(--accent);
-    font-weight: 600;
-    margin: 0 0 14px;
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 0.78rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.02);
+    border-radius: 100px;
+    padding: 7px 15px 7px 12px;
+    margin-bottom: 28px;
   }
-  .lede { font-size: 1.18rem; color: var(--ink-soft); max-width: 62ch; margin: 0 0 26px; }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--mint);
+    box-shadow: 0 0 0 0 rgba(74, 222, 159, 0.5);
+    animation: pulse 2.6s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(74,222,159,0.45); }
+    70%  { box-shadow: 0 0 0 8px rgba(74,222,159,0); }
+    100% { box-shadow: 0 0 0 0 rgba(74,222,159,0); }
+  }
+
+  .name {
+    font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 8vw, 4.4rem);
+    font-weight: 700;
+    margin-bottom: 26px;
+  }
+  .grad {
+    background: linear-gradient(96deg, #fff 12%, var(--accent) 58%, var(--mint) 105%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+  .lede {
+    font-size: clamp(1.05rem, 2.3vw, 1.28rem);
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin-bottom: 34px;
+  }
+  .lede em { color: var(--ink); font-style: italic; }
+
   .links { display: flex; flex-wrap: wrap; gap: 12px; }
   .btn {
-    display: inline-block;
-    padding: 10px 18px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
+    position: relative;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 500;
     border: 1px solid var(--line);
     color: var(--ink);
-    background: var(--bg);
+    background: var(--bg-card);
+    transition: transform 260ms var(--ease), border-color 260ms var(--ease),
+                background 260ms var(--ease);
   }
-  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn:hover { transform: translateY(-2px); border-color: var(--accent-deep); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent-deep), var(--accent));
+    border-color: transparent; color: #fff;
+    box-shadow: 0 8px 26px -10px var(--accent-deep);
+  }
+  .btn-primary:hover { box-shadow: 0 14px 34px -10px var(--accent-deep); }
+  .btn .arw { transition: transform 260ms var(--ease); }
+  .btn:hover .arw { transform: translateX(3px); }
 
   /* ── Sections ── */
-  section { padding: 60px 0; border-bottom: 1px solid var(--line); }
-  section:last-of-type { border-bottom: 0; }
+  section { padding: clamp(64px, 11vh, 108px) 0; position: relative; }
+  .lift { background: var(--bg-lift); border-block: 1px solid var(--line-soft); }
+
   .kicker {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-    color: var(--ink-faint);
-    font-weight: 600;
-    margin: 0 0 10px;
+    font-size: 0.76rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 14px;
   }
-  .sub { color: var(--ink-soft); max-width: 66ch; }
+  h2 { font-size: clamp(1.7rem, 4.4vw, 2.4rem); font-weight: 650; margin-bottom: 16px; }
+  h3 { font-size: 1.12rem; font-weight: 600; margin-bottom: 10px; }
+  .sub { color: var(--ink-soft); max-width: 64ch; font-size: 1.04rem; }
 
   /* ── Chiffres ── */
   .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 28px 0 0;
+    grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+    gap: 14px;
+    margin-top: 40px;
   }
-  .stat { background: var(--bg); padding: 18px 20px; }
+  .stat {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 20px;
+    transition: transform 340ms var(--ease), border-color 340ms var(--ease);
+  }
+  .stat:hover { transform: translateY(-4px); border-color: var(--accent-deep); }
   .stat b {
     display: block;
-    font-size: 1.5rem;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.6rem, 3.4vw, 2rem);
+    font-weight: 680;
+    letter-spacing: -0.035em;
     font-variant-numeric: tabular-nums;
+    background: linear-gradient(180deg, #fff, #b9b4ff);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
   }
-  .stat span { font-size: 0.87rem; color: var(--ink-soft); }
+  .stat span { font-size: 0.86rem; color: var(--ink-faint); line-height: 1.45; display: block; }
 
   /* ── Captures ── */
-  figure { margin: 26px 0 0; }
-  figure img {
-    width: 100%;
-    height: auto;
-    display: block;
+  figure { margin: 38px 0 0; }
+  .shot {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
     border: 1px solid var(--line);
-    border-radius: 10px;
+    background: var(--bg-card);
+    box-shadow: 0 30px 60px -35px rgba(0,0,0,0.9);
+    transition: transform 500ms var(--ease), box-shadow 500ms var(--ease);
+  }
+  .shot:hover { transform: translateY(-5px); box-shadow: 0 40px 70px -30px rgba(0,0,0,0.95); }
+  .shot img { width: 100%; height: auto; display: block; }
+  .shot::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 76%, rgba(8,9,15,0.5));
+    pointer-events: none;
   }
   figcaption {
-    font-size: 0.88rem;
-    color: var(--ink-soft);
-    margin-top: 10px;
-    max-width: 66ch;
+    font-size: 0.9rem; color: var(--ink-faint);
+    margin-top: 14px; max-width: 64ch; line-height: 1.6;
   }
+  figcaption strong { color: var(--ink-soft); font-weight: 600; }
 
   /* ── Décisions ── */
+  .decisions { margin-top: 42px; display: grid; gap: 16px; }
   .decision {
-    padding: 22px 0;
-    border-top: 1px solid var(--line);
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 380ms var(--ease), border-color 380ms var(--ease);
   }
-  .decision:first-of-type { border-top: 0; }
-  .decision p { margin: 0 0 10px; color: var(--ink-soft); }
+  .decision::before {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+    opacity: 0; transition: opacity 380ms var(--ease);
+  }
+  .decision:hover { transform: translateY(-3px); border-color: #2a2e42; }
+  .decision:hover::before { opacity: 1; }
+  .decision p { color: var(--ink-soft); margin-bottom: 12px; font-size: 0.99rem; }
   .decision p:last-child { margin-bottom: 0; }
-  .decision strong { color: var(--ink); }
+  .decision strong { color: var(--ink); font-weight: 600; }
+
   .metric {
     display: inline-block;
-    background: var(--accent-soft);
+    font-weight: 650; font-size: 0.94rem;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
     color: var(--accent);
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 3px 9px;
-    border-radius: 6px;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+    background: rgba(139,124,255,0.1);
+    border: 1px solid rgba(139,124,255,0.22);
+    padding: 2px 9px; border-radius: 7px;
   }
+  .metric-mint { color: var(--mint); background: rgba(74,222,159,0.09); border-color: rgba(74,222,159,0.22); }
 
   /* ── Listes ── */
-  ul { margin: 0 0 16px; padding-left: 20px; color: var(--ink-soft); }
-  li { margin-bottom: 8px; }
-  li strong { color: var(--ink); }
+  .points { list-style: none; padding: 0; margin: 34px 0 0; display: grid; gap: 18px; }
+  .points li {
+    color: var(--ink-soft);
+    padding-left: 30px; position: relative;
+    font-size: 1.01rem;
+  }
+  .points li::before {
+    content: "";
+    position: absolute; left: 6px; top: 0.72em;
+    width: 7px; height: 7px; border-radius: 2px;
+    background: var(--accent);
+    transform: rotate(45deg);
+  }
+  .points strong { color: var(--ink); font-weight: 600; }
 
   /* ── Stack ── */
-  .stack {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 22px;
-    margin-top: 24px;
+  .stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px; margin-top: 38px; }
+  .stack div {
+    background: var(--bg-card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 22px;
+    transition: border-color 340ms var(--ease), transform 340ms var(--ease);
   }
-  .stack h3 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
-  .stack p { font-size: 0.95rem; color: var(--ink-soft); margin: 0; }
+  .stack div:hover { border-color: var(--accent-deep); transform: translateY(-3px); }
+  .stack h3 {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.13em;
+    color: var(--accent); margin-bottom: 10px;
+  }
+  .stack p { font-size: 0.93rem; color: var(--ink-soft); margin: 0; line-height: 1.62; }
 
   /* ── Encart ── */
   .callout {
-    background: var(--bg-soft);
-    border-left: 3px solid var(--accent);
-    padding: 20px 22px;
-    border-radius: 0 8px 8px 0;
-    margin: 26px 0 0;
+    margin-top: 38px; padding: 30px;
+    border-radius: 16px;
+    background:
+      radial-gradient(120% 130% at 0% 0%, rgba(139,124,255,0.11), transparent 58%),
+      var(--bg-card);
+    border: 1px solid var(--line);
   }
+  .callout h3 { color: var(--ink); margin-bottom: 14px; }
+  .callout p { color: var(--ink-soft); font-size: 0.99rem; }
   .callout p:last-child { margin-bottom: 0; }
 
-  footer { padding: 56px 0 72px; color: var(--ink-soft); font-size: 0.95rem; }
-  footer a { font-weight: 500; }
+  /* ── Pied ── */
+  footer { padding: clamp(64px, 10vh, 96px) 0; border-top: 1px solid var(--line-soft); }
+  footer p { color: var(--ink-faint); font-size: 0.96rem; max-width: 58ch; }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 26px; }
+  .foot-links a {
+    color: var(--ink); font-weight: 500;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 3px;
+    transition: border-color 260ms var(--ease), color 260ms var(--ease);
+  }
+  .foot-links a:hover { border-color: var(--accent); color: var(--accent); }
 
-  @media (max-width: 600px) {
+  /* ── Entrée au défilement ── */
+  .rise { opacity: 0; transform: translateY(22px); }
+  .rise.in {
+    opacity: 1; transform: none;
+    transition: opacity 780ms var(--ease), transform 780ms var(--ease);
+  }
+  .rise.in.d1 { transition-delay: 90ms; }
+  .rise.in.d2 { transition-delay: 180ms; }
+  .rise.in.d3 { transition-delay: 270ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .rise, .rise.in { opacity: 1; transform: none; transition: none; }
+    .hero::before, .dot { animation: none; }
+    * { transition-duration: 1ms !important; }
+  }
+
+  @media (max-width: 620px) {
     body { font-size: 16px; }
-    header { padding: 48px 0 40px; }
-    section { padding: 44px 0; }
+    .decision, .callout { padding: 22px; }
+    .stats { gap: 10px; }
   }
 </style>
 </head>
 <body>
 
-<header>
+<div id="bar"></div>
+
+<header class="hero">
   <div class="wrap">
-    <p class="eyebrow">Développeur fullstack</p>
-    <h1>Pierre-Jean Liard</h1>
-    <p class="lede">
-      Je conçois des applications web où les chiffres affichés à l'utilisateur
-      sont justes — et où l'on sait <em>pourquoi</em> ils le sont. Python, React,
-      et une attention particulière à ce qui casse silencieusement.
+    <span class="eyebrow rise"><span class="dot"></span>Développeur fullstack</span>
+    <p class="name rise d1">Pierre-Jean Liard</p>
+    <h1 class="rise d1"><span class="grad">Des chiffres justes,<br>et le pourquoi.</span></h1>
+    <p class="lede rise d2">
+      Je conçois des applications web où les valeurs affichées à l'utilisateur
+      résistent à l'examen — et où l'on sait <em>pourquoi</em> elles y résistent.
+      Python, React, et une attention particulière à ce qui casse silencieusement.
     </p>
-    <div class="links">
-      <a class="btn btn-primary" href="mailto:pierrejean.liard@gmail.com">pierrejean.liard@gmail.com</a>
-      <a class="btn" href="https://www.linkedin.com/in/pierre-jean-liard-203535136/" rel="noopener">LinkedIn</a>
+    <div class="links rise d3">
+      <a class="btn btn-primary" href="#projet">Voir le projet <span class="arw">→</span></a>
+      <a class="btn" href="mailto:pierrejean.liard@gmail.com">Me contacter</a>
     </div>
   </div>
 </header>
 
-<section>
+<section id="projet">
   <div class="wrap">
-    <p class="kicker">Projet</p>
-    <h2>Chess Analyzer</h2>
-    <p class="sub">
+    <p class="kicker rise">Projet</p>
+    <h2 class="rise">Chess Analyzer</h2>
+    <p class="sub rise d1">
       Une application qui récupère les parties d'un joueur sur Lichess ou Chess.com,
       les fait analyser par Stockfish, et répond à la question qu'un moteur ne traite
       pas : <strong>qu'est-ce que ce joueur rate systématiquement, et que doit-il
-      travailler aujourd'hui ?</strong>
+      travailler aujourd'hui&nbsp;?</strong>
     </p>
 
     <div class="stats">
-      <div class="stat"><b>27 000</b><span>lignes de code applicatif</span></div>
-      <div class="stat"><b>12 000</b><span>lignes de tests</span></div>
-      <div class="stat"><b>53</b><span>détecteurs de motifs</span></div>
-      <div class="stat"><b>5,9 M</b><span>puzzles indexés</span></div>
+      <div class="stat rise"><b data-count="27000" data-suffix=" 000" data-div="1000">0</b><span>lignes de code applicatif</span></div>
+      <div class="stat rise d1"><b data-count="12000" data-suffix=" 000" data-div="1000">0</b><span>lignes de tests</span></div>
+      <div class="stat rise d2"><b data-count="53">0</b><span>détecteurs de motifs</span></div>
+      <div class="stat rise d3"><b data-count="59" data-div="10" data-decimal="1" data-suffix=" M">0</b><span>puzzles indexés</span></div>
     </div>
 
-    <figure>
-      <img src="assets/rapport.png" alt="Rapport d'analyse : précision globale de 89 %, niveau estimé par phase de jeu, faiblesse prioritaire" loading="lazy">
+    <figure class="rise">
+      <div class="shot">
+        <img src="assets/rapport.png" alt="Rapport d'analyse : précision globale de 89 %, niveau estimé par phase de jeu, faiblesse prioritaire" loading="lazy">
+      </div>
       <figcaption>
         Rapport produit sur 25 parties réelles. La précision suit la formule de Lichess,
-        ce qui rend le chiffre comparable à celui que le joueur voit déjà ailleurs.
+        ce qui rend le chiffre <strong>comparable à celui que le joueur voit déjà ailleurs</strong>.
       </figcaption>
     </figure>
   </div>
 </section>
 
-<section>
+<section class="lift">
   <div class="wrap">
-    <p class="kicker">Le problème</p>
-    <h2>Un moteur d'échecs ne dit pas ce qu'il faut travailler</h2>
-    <p class="sub">
+    <p class="kicker rise">Le problème</p>
+    <h2 class="rise">Un moteur ne dit pas quoi travailler</h2>
+    <p class="sub rise d1">
       Stockfish sait qu'un coup a coûté 180 centipions. Il ne dit ni pourquoi, ni si
       l'erreur est récurrente, ni ce qu'il faudrait réviser. Traduire une suite
       d'évaluations en diagnostic exploitable demande trois choses, et chacune est un
-      piège :
+      piège.
     </p>
-    <ul>
-      <li><strong>Des métriques justes.</strong> Perdre 50 centipions n'a pas le même sens à égalité et avec une dame d'avance. Un seuil fixe traite les deux cas identiquement — et se trompe dans les deux.</li>
-      <li><strong>Une attribution causale.</strong> Un clouage est présent dans énormément de positions sans être ce que le joueur a manqué. Détecter une figure géométrique ne suffit pas ; il faut prouver que le gain se concrétise.</li>
-      <li><strong>De l'honnêteté statistique.</strong> Sur vingt parties, presque aucun motif n'apparaît assez souvent pour conclure. Un produit qui l'ignore fabrique des diagnostics à partir de bruit.</li>
+    <ul class="points">
+      <li class="rise"><strong>Des métriques justes.</strong> Perdre 50 centipions n'a pas le même sens à égalité et avec une dame d'avance. Un seuil fixe traite les deux cas identiquement — et se trompe dans les deux.</li>
+      <li class="rise d1"><strong>Une attribution causale.</strong> Un clouage est présent dans énormément de positions sans être ce que le joueur a manqué. Détecter une figure géométrique ne suffit pas : il faut prouver que le gain se concrétise.</li>
+      <li class="rise d2"><strong>De l'honnêteté statistique.</strong> Sur vingt parties, presque aucun motif n'apparaît assez souvent pour conclure. Un produit qui l'ignore fabrique des diagnostics à partir de bruit.</li>
     </ul>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <p class="kicker">Le produit</p>
-    <h2>Du diagnostic au rituel quotidien</h2>
-    <p class="sub">
+    <p class="kicker rise">Le produit</p>
+    <h2 class="rise">Du diagnostic au rituel quotidien</h2>
+    <p class="sub rise d1">
       Un rapport qu'on lit une fois n'a jamais fait progresser personne. L'application
       transforme le diagnostic en séance de dix minutes, renouvelée chaque jour.
     </p>
 
-    <figure>
-      <img src="assets/aujourdhui.png" alt="Écran Aujourd'hui : session du jour avec révisions dues et nouveaux puzzles" loading="lazy">
+    <figure class="rise">
+      <div class="shot">
+        <img src="assets/aujourdhui.png" alt="Écran Aujourd'hui : session du jour avec révisions dues et nouveaux puzzles" loading="lazy">
+      </div>
       <figcaption>
         L'écran d'accueil ne montre pas un tableau de bord, mais une seule chose à faire :
         les positions dues en répétition espacée, plus des puzzles ciblés sur la faiblesse
@@ -259,127 +427,133 @@
       </figcaption>
     </figure>
 
-    <figure>
-      <img src="assets/faiblesses.png" alt="Onglet Faiblesses : motif signalé avec la mention « pas assez de données (1/12) »" loading="lazy">
+    <figure class="rise">
+      <div class="shot">
+        <img src="assets/faiblesses.png" alt="Onglet Faiblesses : motif signalé avec la mention « pas assez de données (1/12) »" loading="lazy">
+      </div>
       <figcaption>
         Une faiblesse n'est déclarée qu'au-delà de douze occurrences, et seulement si la
         borne inférieure de Wilson à 95 % dépasse la moyenne de la cohorte. En dessous,
-        le motif reste affiché mais sans note d'impact : <strong>l'application dit qu'elle
-        ne sait pas encore</strong>.
+        le motif reste affiché sans note d'impact : <strong>l'application dit qu'elle ne
+        sait pas encore</strong>.
       </figcaption>
     </figure>
 
-    <figure>
-      <img src="assets/progression.png" alt="Page Progression : évolution de la précision et des faiblesses dans le temps" loading="lazy">
-      <figcaption>
-        Le suivi compare les analyses successives, faiblesse par faiblesse.
-      </figcaption>
+    <figure class="rise">
+      <div class="shot">
+        <img src="assets/progression.png" alt="Page Progression : évolution de la précision et des faiblesses dans le temps" loading="lazy">
+      </div>
+      <figcaption>Le suivi compare les analyses successives, faiblesse par faiblesse.</figcaption>
     </figure>
   </div>
 </section>
 
-<section>
+<section class="lift">
   <div class="wrap">
-    <p class="kicker">Ingénierie</p>
-    <h2>Quatre décisions, et ce qu'elles ont coûté</h2>
-    <p class="sub">
-      Les choix ci-dessous sont ceux qui ont le plus façonné le projet. Chacun a été
-      pris contre une alternative crédible, et chacun se mesure.
+    <p class="kicker rise">Ingénierie</p>
+    <h2 class="rise">Quatre décisions, et ce qu'elles ont coûté</h2>
+    <p class="sub rise d1">
+      Les choix ci-dessous ont le plus façonné le projet. Chacun a été pris contre une
+      alternative crédible, et chacun se mesure.
     </p>
 
-    <div class="decision">
-      <h3>Séparer ce qui coûte du moteur de ce qui relève de l'interprétation</h3>
-      <p>
-        Analyser une partie prend <span class="metric">43 s</span> de Stockfish.
-        Recalculer un rapport depuis les analyses déjà en cache en prend
-        <span class="metric">70 ms</span> — pour vingt-cinq parties.
-      </p>
-      <p>
-        Ce rapport de un à cinquante mille dicte l'architecture : chaque partie est
-        analysée une seule fois puis stockée, et le rapport se reconstruit par-dessus
-        à volonté. Modifier une pondération se répercute alors sur tout l'historique
-        instantanément, au lieu de demander des heures de calcul. J'ai vécu le bénéfice
-        pendant ce projet : après avoir corrigé une règle de classement, régénérer le
-        rapport complet a pris soixante-dix millisecondes.
-      </p>
-      <p>
-        <strong>Le coût :</strong> toute donnée utile au rapport final doit être
-        persistée au niveau de la partie. Deux fonctionnalités calculées uniquement
-        dans le chemin direct étaient mortes en production alors que les tests passaient.
-      </p>
-    </div>
+    <div class="decisions">
+      <article class="decision rise">
+        <h3>Séparer ce qui coûte du moteur de ce qui relève de l'interprétation</h3>
+        <p>
+          Analyser une partie prend <span class="metric">43 s</span> de Stockfish.
+          Recalculer un rapport depuis les analyses en cache en prend
+          <span class="metric metric-mint">70 ms</span> — pour vingt-cinq parties.
+        </p>
+        <p>
+          Ce rapport de un à cinquante mille dicte l'architecture : chaque partie est
+          analysée une seule fois puis stockée, et le rapport se reconstruit par-dessus
+          à volonté. Modifier une pondération se répercute alors sur tout l'historique
+          instantanément, au lieu de demander des heures de calcul. J'ai vécu le bénéfice
+          pendant ce projet : après avoir corrigé une règle de classement, régénérer le
+          rapport complet a pris soixante-dix millisecondes.
+        </p>
+        <p>
+          <strong>Le coût :</strong> toute donnée utile au rapport final doit être
+          persistée au niveau de la partie. Deux fonctionnalités calculées uniquement
+          dans le chemin direct étaient mortes en production alors que les tests passaient.
+        </p>
+      </article>
 
-    <div class="decision">
-      <h3>Budgéter le moteur en nœuds, pas en temps</h3>
-      <p>
-        Une limite de temps donne un résultat différent selon la machine et la charge :
-        les comparaisons dans la durée, cœur du suivi de progression, n'auraient plus
-        de sens. Une profondeur fixe est reproductible mais son coût explose en position
-        complexe.
-      </p>
-      <p>
-        Le moteur travaille donc à un million de nœuds par position — reproductible
-        <em>et</em> borné, comme l'infrastructure d'analyse de Lichess. Prix payé :
-        <span class="metric">2,27 s par coup</span> en multi-variantes.
-      </p>
-    </div>
+      <article class="decision rise">
+        <h3>Budgéter le moteur en nœuds, pas en temps</h3>
+        <p>
+          Une limite de temps donne un résultat différent selon la machine et la charge :
+          les comparaisons dans la durée, cœur du suivi de progression, n'auraient plus
+          de sens. Une profondeur fixe est reproductible, mais son coût explose en
+          position complexe.
+        </p>
+        <p>
+          Le moteur travaille donc à un million de nœuds par position — reproductible
+          <em>et</em> borné, comme l'infrastructure d'analyse de Lichess. Prix payé :
+          <span class="metric">2,27 s par coup</span> en multi-variantes.
+        </p>
+      </article>
 
-    <div class="decision">
-      <h3>Refuser d'afficher un chiffre qu'on ne peut pas soutenir</h3>
-      <p>
-        Le principe traverse tout le code, et c'est le plus contre-intuitif : le produit
-        préfère afficher « pas assez de données » qu'une valeur plausible.
-      </p>
-      <p>
-        Sans Stockfish, l'analyse échoue au lieu de basculer sur une évaluation
-        matérielle — celle-ci donnerait mécaniquement une précision de 100 %, soit un
-        rapport faux et parfaitement crédible. De même, un niveau estimé par phase de
-        jeu n'apparaît qu'au-delà de <span class="metric">100 coups évalués</span> :
-        en dessous, l'intervalle de confiance dépasse la largeur de toute la table de
-        correspondance. Le seuil sort d'un calcul d'erreur standard, pas d'une intuition.
-      </p>
-    </div>
+      <article class="decision rise">
+        <h3>Refuser d'afficher un chiffre qu'on ne peut pas soutenir</h3>
+        <p>
+          Le principe traverse tout le code, et c'est le plus contre-intuitif : le produit
+          préfère afficher « pas assez de données » qu'une valeur plausible.
+        </p>
+        <p>
+          Sans Stockfish, l'analyse échoue au lieu de basculer sur une évaluation
+          matérielle — celle-ci donnerait mécaniquement une précision de 100 %, soit un
+          rapport faux et parfaitement crédible. De même, un niveau estimé par phase
+          n'apparaît qu'au-delà de <span class="metric">100 coups évalués</span> : en
+          dessous, l'intervalle de confiance dépasse la largeur de toute la table de
+          correspondance. Le seuil sort d'un calcul d'erreur standard, pas d'une intuition.
+        </p>
+      </article>
 
-    <div class="decision">
-      <h3>Valider les motifs par le gain réel, pas par la géométrie</h3>
-      <p>
-        Une première version signalait « clouage manqué » dès qu'un clouage existait
-        dans la position — y compris quand le joueur avait perdu sa dame pour une raison
-        sans rapport. Le diagnostic était décoratif.
-      </p>
-      <p>
-        Un motif n'est désormais retenu que si son gain se concrétise dans la ligne
-        principale du moteur. Les détecteurs sont des fonctions pures, testables sur
-        une simple position : c'est ce qui rend soutenables les
-        <span class="metric">53 détecteurs</span> et leurs tests.
-      </p>
+      <article class="decision rise">
+        <h3>Valider les motifs par le gain réel, pas par la géométrie</h3>
+        <p>
+          Une première version signalait « clouage manqué » dès qu'un clouage existait
+          dans la position — y compris quand le joueur avait perdu sa dame pour une raison
+          sans rapport. Le diagnostic était décoratif.
+        </p>
+        <p>
+          Un motif n'est désormais retenu que si son gain se concrétise dans la ligne
+          principale du moteur. Les détecteurs sont des fonctions pures, testables sur
+          une simple position : c'est ce qui rend soutenables les
+          <span class="metric">53 détecteurs</span> et leurs tests.
+        </p>
+      </article>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <p class="kicker">Méthode</p>
-    <h2>Comment je sais que ça marche</h2>
-    <p class="sub">
+    <p class="kicker rise">Méthode</p>
+    <h2 class="rise">Comment je sais que ça marche</h2>
+    <p class="sub rise d1">
       Un outil de mesure doit rendre des comptes sur ses propres mesures. Quatre niveaux
       de garantie, du moins au plus coûteux.
     </p>
-    <ul>
-      <li><strong>Chaque formule cite sa source.</strong> Probabilité de gain, seuils d'erreur, calcul de précision, découpage des phases : tout est repris des sources primaires de Lichess, référencées en commentaire. Aucune constante magique.</li>
-      <li><strong>1 172 tests, deux niveaux.</strong> Les tests unitaires tournent en <span class="metric">22 s</span> — assez rapide pour ne jamais hésiter à les lancer. Les tests d'intégration pilotent un vrai moteur sur de vraies parties et prennent dix minutes ; un marqueur sépare les deux, la CI exécute tout.</li>
-      <li><strong>Un test de calibration de bout en bout</strong> compare la chaîne complète à des valeurs de référence. Tout ajustement de seuil qui déplacerait les résultats le fait échouer.</li>
-      <li><strong>Une intégration continue</strong> qui rejoue les tests sur une machine vierge, reconstruit le frontend depuis zéro et fabrique l'image Docker.</li>
+
+    <ul class="points">
+      <li class="rise"><strong>Chaque formule cite sa source.</strong> Probabilité de gain, seuils d'erreur, calcul de précision, découpage des phases : tout est repris des sources primaires de Lichess, référencées en commentaire. Aucune constante magique.</li>
+      <li class="rise d1"><strong>1 172 tests, deux niveaux.</strong> Les tests unitaires tournent en <span class="metric metric-mint">22 s</span> — assez rapide pour ne jamais hésiter à les lancer. Les tests d'intégration pilotent un vrai moteur sur de vraies parties et prennent dix minutes ; un marqueur sépare les deux, la CI exécute tout.</li>
+      <li class="rise d2"><strong>Un test de calibration de bout en bout</strong> compare la chaîne complète à des valeurs de référence. Tout ajustement de seuil qui déplacerait les résultats le fait échouer.</li>
+      <li class="rise d3"><strong>Une intégration continue</strong> qui rejoue les tests sur une machine vierge, reconstruit le frontend depuis zéro et fabrique l'image Docker.</li>
     </ul>
 
-    <div class="callout">
+    <div class="callout rise">
+      <h3>Ce que les tests ne voient pas</h3>
       <p>
-        <strong>Ce que les tests ne voient pas.</strong> Avec 1 139 tests au vert, j'ai
-        pris trente minutes pour piloter l'application comme un utilisateur. J'y ai
-        trouvé six défauts qu'aucun test ne détectait : le bouton unique de l'écran
-        d'accueil menait à une page inexistante ; la sonde de santé lisait un attribut
-        qui n'a jamais existé et annonçait le moteur indisponible sur toute machine ;
-        deux comptes analysant le même pseudo public voyaient mutuellement leurs données.
+        Avec 1 139 tests au vert, j'ai pris trente minutes pour piloter l'application
+        comme un utilisateur. J'y ai trouvé six défauts qu'aucun test ne détectait : le
+        bouton unique de l'écran d'accueil menait à une page inexistante ; la sonde de
+        santé lisait un attribut qui n'a jamais existé et annonçait le moteur
+        indisponible sur toute machine ; deux comptes analysant le même pseudo public
+        voyaient mutuellement leurs données.
       </p>
       <p>
         Ces bugs vivent dans les jointures — liens contre routes, attributs contre objets
@@ -391,24 +565,24 @@
   </div>
 </section>
 
-<section>
+<section class="lift">
   <div class="wrap">
-    <p class="kicker">Technique</p>
-    <h2>Stack</h2>
+    <p class="kicker rise">Technique</p>
+    <h2 class="rise">Stack</h2>
     <div class="stack">
-      <div>
+      <div class="rise">
         <h3>Backend</h3>
         <p>Python, Flask, SQLAlchemy, Pydantic. Celery et Redis pour les analyses longues, PostgreSQL en production, SQLite en développement. Authentification JWT, paiement Stripe.</p>
       </div>
-      <div>
+      <div class="rise d1">
         <h3>Frontend</h3>
         <p>React, React Router, échiquiers interactifs. Interface en trois couches : l'essentiel visible d'emblée, le détail à la demande.</p>
       </div>
-      <div>
+      <div class="rise d2">
         <h3>Analyse</h3>
         <p>Stockfish en UCI, multi-variantes, tables de finales Syzygy. Livre d'ouvertures de 5 200 positions, base de 5,9 millions de puzzles.</p>
       </div>
-      <div>
+      <div class="rise d3">
         <h3>Qualité</h3>
         <p>pytest, GitHub Actions, Docker. Un audit complet du projet — 88 problèmes identifiés puis traités — documenté et conservé.</p>
       </div>
@@ -418,17 +592,69 @@
 
 <footer>
   <div class="wrap">
-    <p>
-      Le code de Chess Analyzer n'est pas public. Je le présente volontiers en
-      entretien, documentation technique à l'appui.
+    <h2 class="rise" style="margin-bottom:18px">Parlons-en</h2>
+    <p class="rise d1">
+      Le code de Chess Analyzer n'est pas public. Je le présente volontiers,
+      documentation technique à l'appui.
     </p>
-    <p>
+    <div class="foot-links rise d2">
       <a href="mailto:pierrejean.liard@gmail.com">pierrejean.liard@gmail.com</a>
-      &nbsp;·&nbsp;
       <a href="https://www.linkedin.com/in/pierre-jean-liard-203535136/" rel="noopener">LinkedIn</a>
-    </p>
+    </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Barre de progression de lecture
+  var bar = document.getElementById('bar');
+  function progress() {
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  }
+  addEventListener('scroll', progress, { passive: true });
+  progress();
+
+  if (reduced || !('IntersectionObserver' in window)) {
+    document.querySelectorAll('.rise').forEach(function (el) { el.classList.add('in'); });
+    document.querySelectorAll('[data-count]').forEach(function (el) { el.textContent = el.dataset.final || el.textContent; });
+    return;
+  }
+
+  // Entrée au défilement
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  document.querySelectorAll('.rise').forEach(function (el) { io.observe(el); });
+
+  // Compteurs : comptent une fois, à l'entrée dans le champ
+  function render(el, v) {
+    var dec = +(el.dataset.decimal || 0);
+    var div = +(el.dataset.div || 1);
+    var n = v / div;
+    var txt = dec ? n.toFixed(dec).replace('.', ',') : Math.round(n).toLocaleString('fr-FR');
+    el.textContent = txt + (el.dataset.suffix || '');
+  }
+  var counters = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target, target = +el.dataset.count, t0 = null;
+      counters.unobserve(el);
+      requestAnimationFrame(function step(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min((ts - t0) / 1100, 1);
+        render(el, target * (1 - Math.pow(1 - p, 3)));   // easeOutCubic
+        if (p < 1) requestAnimationFrame(step);
+      });
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('[data-count]').forEach(function (el) { counters.observe(el); });
+})();
+</script>
 
 </body>
 </html>
