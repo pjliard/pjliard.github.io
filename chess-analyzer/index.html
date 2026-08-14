@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pierre-Jean Liard — Développeur fullstack</title>
+<meta name="description" content="Chess Analyzer : analyse de parties d'échecs avec Stockfish, diagnostic de faiblesses et entraînement personnalisé.">
+<meta name="theme-color" content="#08090f">
+<meta property="og:title" content="Pierre-Jean Liard — Développeur fullstack">
+<meta property="og:description" content="Chess Analyzer : de 25 parties à un plan d'entraînement.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♟</text></svg>">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div id="bar"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow rise"><span class="dot"></span>Développeur fullstack</span>
+    <p class="name rise d1">Pierre-Jean Liard</p>
+    <h1 class="rise d1"><span class="grad">Des chiffres justes,<br>et le pourquoi.</span></h1>
+    <p class="lede rise d2">
+      Python, React, Stockfish. Je construis des systèmes dont les résultats
+      résistent à l'examen.
+    </p>
+    <div class="links rise d3">
+      <a class="btn btn-primary" href="#projet">Voir le projet <span class="arw">→</span></a>
+      <a class="btn" href="mailto:pierrejean.liard@gmail.com">Me contacter</a>
+    </div>
+  </div>
+</header>
+
+<section id="projet">
+  <div class="wrap">
+    <p class="kicker rise">Projet</p>
+    <h2 class="rise">Chess Analyzer</h2>
+    <p class="sub rise d1">
+      Analyse les parties d'un joueur, identifie ce qu'il rate systématiquement,
+      et en fait une séance d'entraînement quotidienne.
+    </p>
+
+    <div class="stats">
+      <div class="stat rise"><b data-count="27000" data-div="1000" data-suffix=" 000">0</b><span>lignes de code</span></div>
+      <div class="stat rise d1"><b data-count="1172">0</b><span>tests automatisés</span></div>
+      <div class="stat rise d2"><b data-count="53">0</b><span>détecteurs de motifs</span></div>
+      <div class="stat rise d3"><b data-count="59" data-div="10" data-decimal="1" data-suffix=" M">0</b><span>puzzles indexés</span></div>
+    </div>
+
+    <figure class="rise">
+      <div class="shot"><img src="../assets/chess-analyzer/rapport.png" alt="Rapport d'analyse : 89 % de précision, niveau estimé par phase, faiblesse prioritaire" loading="lazy"></div>
+      <figcaption>Rapport sur 25 parties réelles. Précision calculée avec les formules de Lichess — <b>le chiffre est comparable à celui que le joueur voit déjà</b>.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="lift">
+  <div class="wrap">
+    <p class="kicker rise">Fonctionnement</p>
+    <h2 class="rise">D'un pseudo à un plan d'entraînement</h2>
+    <p class="sub rise d1">Une seule étape coûte cher. Elle ne tourne qu'une fois par partie.</p>
+
+    <figure class="rise">
+      <div class="diagram">
+        <svg viewBox="0 0 900 306" role="img"
+             aria-label="Les parties récupérées passent par des workers Stockfish, sont analysées coup par coup puis stockées en cache. Le rapport et les exercices se reconstruisent depuis ce cache en 70 millisecondes, sans repasser par le moteur.">
+          <defs>
+            <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#2a2e42"/>
+            </marker>
+            <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#6455e8"/>
+            </marker>
+          </defs>
+
+          <text class="t-sm fade" x="20" y="22">ÉTAGE 1 — COÛTEUX, UNE FOIS PAR PARTIE</text>
+
+          <rect class="box fade" x="20" y="38" width="152" height="58" rx="10"/>
+          <text class="t fade" x="96" y="62" text-anchor="middle">Lichess / Chess.com</text>
+          <text class="t-sm fade" x="96" y="80" text-anchor="middle">PGN · filtre cadence</text>
+
+          <line class="wire draw s1" style="--len:66" x1="172" y1="67" x2="236" y2="67" marker-end="url(#a)"/>
+
+          <rect class="box fade s1" x="238" y="38" width="140" height="58" rx="10"/>
+          <text class="t fade s1" x="308" y="62" text-anchor="middle">Workers</text>
+          <text class="t-sm fade s1" x="308" y="80" text-anchor="middle">1 Stockfish chacun</text>
+
+          <line class="wire draw s2" style="--len:66" x1="378" y1="67" x2="442" y2="67" marker-end="url(#a)"/>
+
+          <rect class="box fade s2" x="444" y="38" width="176" height="58" rx="10"/>
+          <text class="t fade s2" x="532" y="62" text-anchor="middle">Analyse coup par coup</text>
+          <text class="t-sm fade s2" x="532" y="80" text-anchor="middle">MultiPV 3 · 1 M nœuds</text>
+
+          <line class="wire draw s3" style="--len:66" x1="620" y1="67" x2="684" y2="67" marker-end="url(#a)"/>
+
+          <rect class="box fade s3" x="686" y="38" width="194" height="58" rx="10"/>
+          <text class="t fade s3" x="783" y="62" text-anchor="middle">Détection des motifs</text>
+          <text class="t-sm fade s3" x="783" y="80" text-anchor="middle">53 détecteurs · sur erreurs</text>
+
+          <text class="t-metric fade s3" x="532" y="118" text-anchor="middle">43 s par partie</text>
+
+          <path class="wire draw s4" style="--len:150" d="M783 96 L783 136 L470 136 L470 156" marker-end="url(#a)"/>
+
+          <rect class="box-accent fade s4" x="296" y="158" width="348" height="52" rx="10"/>
+          <text class="t fade s4" x="470" y="180" text-anchor="middle">Cache — une analyse par (partie, joueur)</text>
+          <text class="t-sm fade s4" x="470" y="197" text-anchor="middle">versionné · jamais réanalysé</text>
+
+          <text class="t-sm fade s5" x="20" y="230">ÉTAGE 2 — REJOUABLE À VOLONTÉ</text>
+
+          <path class="wire-accent draw s5" style="--len:130" d="M336 210 L336 270 L262 270" marker-end="url(#aa)"/>
+          <rect class="box-mint fade s5" x="90" y="246" width="170" height="48" rx="10"/>
+          <text class="t fade s5" x="175" y="268" text-anchor="middle">Rapport</text>
+          <text class="t-sm fade s5" x="175" y="284" text-anchor="middle">impact · seuils · verdict</text>
+
+          <path class="wire-accent draw s5" style="--len:130" d="M604 210 L604 270 L678 270" marker-end="url(#aa)"/>
+          <rect class="box-mint fade s5" x="680" y="246" width="170" height="48" rx="10"/>
+          <text class="t fade s5" x="765" y="268" text-anchor="middle">Exercices</text>
+          <text class="t-sm fade s5" x="765" y="284" text-anchor="middle">puzzles · révisions</text>
+
+          <text class="t-metric t-mint fade s5" x="470" y="274" text-anchor="middle">70 ms pour 25 parties</text>
+        </svg>
+      </div>
+      <figcaption>
+        La frontière entre les deux étages est la décision d'architecture centrale :
+        <b>ce qui coûte du moteur est calculé une fois et stocké ; l'interprétation se
+        rejoue à volonté</b>. Changer une règle de classement n'impose pas de réanalyser
+        l'historique.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker rise">Technique</p>
+    <h2 class="rise">Ce qui se passe sur un coup</h2>
+    <p class="sub rise d1">Le moteur donne une évaluation. Il reste à en tirer un jugement qui tienne.</p>
+
+    <figure class="rise">
+      <div class="diagram">
+        <svg viewBox="0 0 900 244" role="img"
+             aria-label="Le moteur propose trois variantes, le coup joué est situé par rapport à elles, sa perte en centipions est convertie en perte de probabilité de gain, puis comparée à des seuils. La détection de motifs ne se déclenche que sur les erreurs.">
+          <defs>
+            <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#2a2e42"/>
+            </marker>
+            <marker id="bb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#6455e8"/>
+            </marker>
+          </defs>
+
+          <rect class="box fade" x="20" y="58" width="128" height="72" rx="10"/>
+          <text class="t fade" x="84" y="88" text-anchor="middle">Position</text>
+          <text class="t-sm fade" x="84" y="106" text-anchor="middle">+ coup joué</text>
+
+          <line class="wire draw s1" style="--len:56" x1="148" y1="94" x2="204" y2="94" marker-end="url(#b)"/>
+
+          <rect class="box fade s1" x="206" y="44" width="156" height="100" rx="10"/>
+          <text class="t fade s1" x="284" y="68" text-anchor="middle">Stockfish MultiPV 3</text>
+          <text class="t-sm fade s1" x="284" y="90" text-anchor="middle">variante 1 · +0,4</text>
+          <text class="t-sm fade s1" x="284" y="107" text-anchor="middle">variante 2 · +0,2</text>
+          <text class="t-sm fade s1" x="284" y="124" text-anchor="middle">variante 3 · −0,1</text>
+
+          <line class="wire draw s2" style="--len:56" x1="362" y1="94" x2="418" y2="94" marker-end="url(#b)"/>
+
+          <rect class="box fade s2" x="420" y="58" width="168" height="72" rx="10"/>
+          <text class="t fade s2" x="504" y="84" text-anchor="middle">Perte du coup joué</text>
+          <text class="t-sm fade s2" x="504" y="104" text-anchor="middle">centipions → Win %</text>
+          <text class="t-sm fade s2" x="504" y="120" text-anchor="middle">conversion logistique</text>
+
+          <line class="wire draw s3" style="--len:56" x1="588" y1="94" x2="644" y2="94" marker-end="url(#b)"/>
+
+          <rect class="box fade s3" x="646" y="44" width="156" height="100" rx="10"/>
+          <text class="t fade s3" x="724" y="68" text-anchor="middle">Seuils sur la perte</text>
+          <text class="t-sm fade s3" x="724" y="90" text-anchor="middle">≥ 0,05 imprécision</text>
+          <text class="t-sm fade s3" x="724" y="107" text-anchor="middle">≥ 0,10 erreur</text>
+          <text class="t-sm fade s3" x="724" y="124" text-anchor="middle">≥ 0,15 gaffe</text>
+
+          <path class="wire-accent draw s4" style="--len:170" d="M724 144 L724 186 L502 186" marker-end="url(#bb)"/>
+          <rect class="box-accent fade s4" x="330" y="166" width="172" height="40" rx="10"/>
+          <text class="t fade s4" x="416" y="191" text-anchor="middle">Détection des motifs</text>
+          <text class="t-metric fade s4" x="614" y="176" text-anchor="middle">sur les erreurs seulement</text>
+
+          <text class="t-sm fade s5" x="20" y="176">Comptés mais jamais notés :</text>
+          <text class="t-sm fade s5" x="20" y="194">· coups de théorie (livre de 5 200 positions)</text>
+          <text class="t-sm fade s5" x="20" y="211">· positions décidées au-delà de ±300 cp</text>
+        </svg>
+      </div>
+      <figcaption>
+        La perte est mesurée en <b>probabilité de gain</b>, jamais en centipions bruts :
+        perdre 50 centipions à égalité et avec une dame d'avance n'a pas le même sens.
+        Un motif n'est retenu que si la variante principale le concrétise.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="lift">
+  <div class="wrap">
+    <p class="kicker rise">Décisions</p>
+    <h2 class="rise">Quatre arbitrages</h2>
+
+    <div class="calls">
+      <div class="call rise">
+        <span class="big mint">70 ms</span>
+        <p><strong>Séparer le moteur de l'interprétation.</strong> Analyser 25 parties prend 18 minutes ; reconstruire leur rapport depuis le cache en prend 70. Une règle de classement se corrige sans réanalyser l'historique.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">1 M nœuds</span>
+        <p><strong>Budgéter en nœuds, pas en temps.</strong> Une limite de temps donne un résultat différent selon la machine — le suivi de progression n'aurait plus de sens. Coût : 2,27 s par coup.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">12 / 100</span>
+        <p><strong>Refuser les chiffres non soutenables.</strong> Une faiblesse exige 12 occurrences et une borne de Wilson au-dessus de la cohorte ; un niveau par phase, 100 coups évalués. En dessous, l'app affiche qu'elle ne sait pas.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">0 repli</span>
+        <p><strong>Échouer plutôt que deviner.</strong> Sans Stockfish, l'analyse s'arrête. Un repli sur le comptage matériel donnerait une précision de 100 % — un rapport faux et parfaitement crédible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker rise">Produit</p>
+    <h2 class="rise">Un rituel, pas un rapport</h2>
+    <p class="sub rise d1">Le diagnostic devient une séance de dix minutes, renouvelée chaque jour.</p>
+
+    <div class="gallery">
+      <figure class="rise">
+        <div class="shot"><img src="../assets/chess-analyzer/aujourdhui.png" alt="Écran Aujourd'hui : séance du jour, révisions dues et nouveaux puzzles" loading="lazy"></div>
+        <figcaption>Une seule chose à faire en ouvrant l'app.</figcaption>
+      </figure>
+      <figure class="rise d1">
+        <div class="shot"><img src="../assets/chess-analyzer/faiblesses.png" alt="Onglet Faiblesses : motif affiché avec la mention pas assez de données" loading="lazy"></div>
+        <figcaption>Sous le seuil, le motif s'affiche <b>sans note d'impact</b>.</figcaption>
+      </figure>
+      <figure class="rise d2">
+        <div class="shot"><img src="../assets/chess-analyzer/progression.png" alt="Page Progression : évolution de la précision et des faiblesses dans le temps" loading="lazy"></div>
+        <figcaption>Chaque faiblesse suivie d'une analyse à l'autre.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="lift">
+  <div class="wrap">
+    <p class="kicker rise">Fiabilité</p>
+    <h2 class="rise">Comment je sais que ça marche</h2>
+
+    <div class="calls">
+      <div class="call rise">
+        <span class="big">1 172</span>
+        <p><strong>Tests sur deux niveaux.</strong> Les unitaires tournent en 22 s ; les tests d'intégration pilotent un vrai moteur sur de vraies parties. Un marqueur sépare les deux, la CI exécute tout.</p>
+      </div>
+      <div class="call rise">
+        <span class="big">0</span>
+        <p><strong>Constante magique.</strong> Probabilité de gain, seuils, précision, découpage des phases : chaque formule cite sa source primaire chez Lichess, en commentaire dans le code.</p>
+      </div>
+      <div class="call rise">
+        <span class="big mint">6</span>
+        <p><strong>Défauts trouvés en pilotant l'app</strong> alors que 1 139 tests passaient : un bouton vers une route inexistante, une sonde de santé qui mentait, une fuite de données entre comptes. Ces bugs vivent dans les jointures, là où les tests unitaires ne vont pas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker rise">Stack</p>
+    <h2 class="rise">Outils</h2>
+    <div class="stack">
+      <div class="rise">
+        <h3>Backend</h3>
+        <p>Python, Flask, SQLAlchemy, Celery + Redis, PostgreSQL, JWT, Stripe.</p>
+      </div>
+      <div class="rise d1">
+        <h3>Frontend</h3>
+        <p>React, React Router, échiquiers interactifs, rapport en trois couches.</p>
+      </div>
+      <div class="rise d2">
+        <h3>Analyse</h3>
+        <p>Stockfish en UCI, tables Syzygy, livre d'ouvertures, 5,9 M puzzles.</p>
+      </div>
+      <div class="rise d3">
+        <h3>Qualité</h3>
+        <p>pytest, GitHub Actions, Docker, audit complet du projet documenté.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2 class="rise" style="margin-bottom:16px">Parlons-en</h2>
+    <p class="rise d1">Le code n'est pas public. Je le présente volontiers, documentation à l'appui.</p>
+    <div class="foot-links rise d2">
+      <a href="mailto:pierrejean.liard@gmail.com">pierrejean.liard@gmail.com</a>
+      <a href="https://www.linkedin.com/in/pierre-jean-liard-203535136/" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../site.js"></script>
+
+</body>
+</html>
